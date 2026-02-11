@@ -135,7 +135,7 @@
                             <tr>
                                 <td colspan="6" class="text-center py-5">
                                     <img src="<?= base_url('assets/static/images/samples/error-404.svg') ?>" alt="No Data" style="height: 150px; opacity: 0.5;">
-                                    <p class="text-muted mt-3 mb-0">Belum ada soal yang dibuat oleh pembuat soal ini.</p>
+                                    <p class="text-muted mt-3 mb-0">Belum ada soal yang dibuat oleh pembuat soal ini untuk mata pelajaran tersebut.</p>
                                 </td>
                             </tr>
                         <?php endif; ?>
