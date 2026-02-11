@@ -1,0 +1,258 @@
+ERROR - 2026-02-10 22:21:14 --> Error connecting to the database: mysqli_sql_exception: Access denied for user 'ujian_tka'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:202
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php(202): mysqli->real_connect('localhost', 'ujian_tka', 'ujian_tka', 'ujian_tka', 3306, '', 0)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Access denied for user '****'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-02-10 22:21:14 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Access denied for user '****'@'localhost' (using password: YES)
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 465.
+ 1 SYSTEMPATH\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `sekolah`
+WHERE `id` = :id:', [...], false)
+ 3 APPPATH\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 5 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-10 22:21:20 --> Error connecting to the database: mysqli_sql_exception: Access denied for user 'ujian_tka'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:202
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php(202): mysqli->real_connect('localhost', 'ujian_tka', 'ujian_tka', 'ujian_tka', 3306, '', 0)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Access denied for user '****'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-02-10 22:21:20 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Access denied for user '****'@'localhost' (using password: YES)
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 465.
+ 1 SYSTEMPATH\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `sekolah`
+WHERE `id` = :id:', [...], false)
+ 3 APPPATH\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 5 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-10 22:22:12 --> Error connecting to the database: mysqli_sql_exception: Access denied for user 'ujian_tka'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:202
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php(202): mysqli->real_connect('localhost', 'ujian_tka', 'ujian_tka', 'ujian_tka', 3306, '', 0)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Access denied for user '****'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-02-10 22:22:12 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Access denied for user '****'@'localhost' (using password: YES)
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 465.
+ 1 SYSTEMPATH\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `sekolah`
+WHERE `id` = :id:', [...], false)
+ 3 APPPATH\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 5 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-10 22:22:16 --> Error connecting to the database: mysqli_sql_exception: Access denied for user 'ujian_tka'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:202
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php(202): mysqli->real_connect('localhost', 'ujian_tka', 'ujian_tka', 'ujian_tka', 3306, '', 0)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Access denied for user '****'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-02-10 22:22:16 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Access denied for user '****'@'localhost' (using password: YES)
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 465.
+ 1 SYSTEMPATH\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `sekolah`
+WHERE `id` = :id:', [...], false)
+ 3 APPPATH\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 5 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-10 22:22:20 --> Error connecting to the database: mysqli_sql_exception: Access denied for user 'ujian_tka'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:202
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php(202): mysqli->real_connect('localhost', 'ujian_tka', 'ujian_tka', 'ujian_tka', 3306, '', 0)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Access denied for user '****'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-02-10 22:22:20 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Access denied for user '****'@'localhost' (using password: YES)
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 465.
+ 1 SYSTEMPATH\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `sekolah`
+WHERE `id` = :id:', [...], false)
+ 3 APPPATH\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 5 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-02-10 22:22:30 --> Error connecting to the database: mysqli_sql_exception: Access denied for user 'ujian_tka'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:202
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php(202): mysqli->real_connect('localhost', 'ujian_tka', 'ujian_tka', 'ujian_tka', 3306, '', 0)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Access denied for user '****'@'localhost' (using password: YES) in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-02-10 22:22:30 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Access denied for user '****'@'localhost' (using password: YES)
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 465.
+ 1 SYSTEMPATH\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `sekolah`
+WHERE `id` = :id:', [...], false)
+ 3 APPPATH\Controllers\BaseController.php(27): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\CodeIgniter.php(904): App\Controllers\BaseController->initController(Object(CodeIgniter\HTTP\IncomingRequest), Object(CodeIgniter\HTTP\Response), Object(CodeIgniter\Log\Logger))
+ 5 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

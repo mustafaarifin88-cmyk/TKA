@@ -1,0 +1,54 @@
+ERROR - 2026-02-11 22:25:25 --> mysqli_sql_exception: Table 'ujian_tka.kelas' doesn't exist in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1678): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', NULL, false)
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Model.php(925): CodeIgniter\Database\BaseBuilder->countAll()
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\Admin\Dashboard.php(24): CodeIgniter\Model->__call('countAll', Array)
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(933): App\Controllers\Admin\Dashboard->index()
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\Dashboard))
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#10 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 {main}
+CRITICAL - 2026-02-11 22:25:25 --> CodeIgniter\Database\Exceptions\DatabaseException: Table 'ujian_tka.kelas' doesn't exist
+[Method: GET, Route: admin/dashboard]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1678): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows` FROM `kelas`', null, false)
+ 2 SYSTEMPATH\Model.php(925): CodeIgniter\Database\BaseBuilder->countAll()
+ 3 APPPATH\Controllers\Admin\Dashboard.php(24): CodeIgniter\Model->__call('countAll', [])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin\Dashboard->index()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\Dashboard))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-11 22:25:25 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Table 'ujian_tka.kelas' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows` FROM `kelas`')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows` FROM `kelas`')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1678): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows` FROM `kelas`', null, false)
+ 4 SYSTEMPATH\Model.php(925): CodeIgniter\Database\BaseBuilder->countAll()
+ 5 APPPATH\Controllers\Admin\Dashboard.php(24): CodeIgniter\Model->__call('countAll', [])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin\Dashboard->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\Dashboard))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-11 22:25:25 --> [Caused by] mysqli_sql_exception: Table 'ujian_tka.kelas' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows` FROM `kelas`', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows` FROM `kelas`')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows` FROM `kelas`')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1678): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows` FROM `kelas`', null, false)
+ 5 SYSTEMPATH\Model.php(925): CodeIgniter\Database\BaseBuilder->countAll()
+ 6 APPPATH\Controllers\Admin\Dashboard.php(24): CodeIgniter\Model->__call('countAll', [])
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin\Dashboard->index()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\Dashboard))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
