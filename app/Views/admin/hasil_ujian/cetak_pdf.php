@@ -198,10 +198,10 @@
                         <td class="text-center"><?= $key + 1 ?></td>
                         <td class="text-center"><?= $s['nisn'] ?></td>
                         <td class="text-left" style="font-weight: 500;"><?= $s['nama'] ?></td>
-                        <td class="text-center"><?= number_format($s['nilai_pg'], 2) ?></td>
-                        <td class="text-center"><?= number_format($s['nilai_pg_kompleks'], 2) ?></td>
-                        <td class="text-center"><?= number_format($s['nilai_benar_salah'], 2) ?></td>
-                        <td class="text-center"><?= number_format($s['nilai_esai'], 2) ?></td>
+                        <td class="text-center"><?= number_format($s['nilai_pg'] ?? 0, 2) ?></td>
+                        <td class="text-center"><?= number_format($s['nilai_pg_kompleks'] ?? 0, 2) ?></td>
+                        <td class="text-center"><?= number_format($s['nilai_benar_salah'] ?? 0, 2) ?></td>
+                        <td class="text-center"><?= number_format($s['nilai_esai'] ?? 0, 2) ?></td>
                         <td class="text-center score"><?= number_format($s['nilai_akhir'], 2) ?></td>
                     </tr>
                 <?php endforeach; ?>

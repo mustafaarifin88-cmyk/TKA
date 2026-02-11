@@ -165,3 +165,160 @@ DEBUG - 2026-02-12 00:57:00 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2026-02-12 01:09:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-02-12 01:09:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-02-12 01:09:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-12 01:15:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-12 01:15:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-12 01:15:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-12 01:15:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-12 01:15:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-12 01:15:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-12 01:16:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-12 01:16:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-02-12 01:16:01 --> mysqli_sql_exception: Table 'ujian_tka.guru_kelas' doesn't exist in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\Guru\Dashboard.php(20): CodeIgniter\Database\BaseBuilder->countAllResults()
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(933): App\Controllers\Guru\Dashboard->index()
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Guru\Dashboard))
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-12 01:16:01 --> CodeIgniter\Database\Exceptions\DatabaseException: Table 'ujian_tka.guru_kelas' doesn't exist
+[Method: GET, Route: guru/dashboard]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = :guru_id:', [...], false)
+ 2 APPPATH\Controllers\Guru\Dashboard.php(20): CodeIgniter\Database\BaseBuilder->countAllResults()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Guru\Dashboard->index()
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Guru\Dashboard))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-12 01:16:01 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Table 'ujian_tka.guru_kelas' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = \'1\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = \'1\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = :guru_id:', [...], false)
+ 4 APPPATH\Controllers\Guru\Dashboard.php(20): CodeIgniter\Database\BaseBuilder->countAllResults()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Guru\Dashboard->index()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Guru\Dashboard))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-12 01:16:01 --> [Caused by] mysqli_sql_exception: Table 'ujian_tka.guru_kelas' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = \'1\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = \'1\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = \'1\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = :guru_id:', [...], false)
+ 5 APPPATH\Controllers\Guru\Dashboard.php(20): CodeIgniter\Database\BaseBuilder->countAllResults()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Guru\Dashboard->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Guru\Dashboard))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-02-12 01:16:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-02-12 01:16:29 --> mysqli_sql_exception: Table 'ujian_tka.guru_kelas' doesn't exist in E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\app\Controllers\Guru\Dashboard.php(20): CodeIgniter\Database\BaseBuilder->countAllResults()
+#5 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(933): App\Controllers\Guru\Dashboard->index()
+#6 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Guru\Dashboard))
+#7 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#9 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 E:\Website\xampp-portable-windows-x64-8.1.2-0-VS16\xampp\htdocs\UjianTKA\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2026-02-12 01:16:29 --> CodeIgniter\Database\Exceptions\DatabaseException: Table 'ujian_tka.guru_kelas' doesn't exist
+[Method: GET, Route: guru/dashboard]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = :guru_id:', [...], false)
+ 2 APPPATH\Controllers\Guru\Dashboard.php(20): CodeIgniter\Database\BaseBuilder->countAllResults()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Guru\Dashboard->index()
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Guru\Dashboard))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-12 01:16:29 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Table 'ujian_tka.guru_kelas' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = \'1\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = \'1\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = :guru_id:', [...], false)
+ 4 APPPATH\Controllers\Guru\Dashboard.php(20): CodeIgniter\Database\BaseBuilder->countAllResults()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Guru\Dashboard->index()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Guru\Dashboard))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-02-12 01:16:29 --> [Caused by] mysqli_sql_exception: Table 'ujian_tka.guru_kelas' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = \'1\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = \'1\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = \'1\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `guru_kelas`
+WHERE `guru_id` = :guru_id:', [...], false)
+ 5 APPPATH\Controllers\Guru\Dashboard.php(20): CodeIgniter\Database\BaseBuilder->countAllResults()
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Guru\Dashboard->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Guru\Dashboard))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-02-12 01:17:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-12 01:17:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-02-12 01:17:58 --> ErrorException: Undefined array key "nip"
+[Method: GET, Route: guru/profile]
+in APPPATH\Views\guru\profile.php on line 56.
+ 1 APPPATH\Views\guru\profile.php(56): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "nip"', 'E:\\Website\\xampp-portable-windows-x64-8.1.2-0-VS16\\xampp\\htdocs\\UjianTKA\\app\\Views\\guru\\profile.php', 56)
+ 2 SYSTEMPATH\View\View.php(226): include('E:\\Website\\xampp-portable-windows-x64-8.1.2-0-VS16\\xampp\\htdocs\\UjianTKA\\app\\Views\\guru\\profile.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('guru/profile', [], true)
+ 5 APPPATH\Controllers\Guru\Profile.php(16): view('guru/profile', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Guru\Profile->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Guru\Profile))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

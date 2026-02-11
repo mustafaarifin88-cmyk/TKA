@@ -17,17 +17,20 @@ class Dashboard extends BaseController
     {
         $guruId = session()->get('id');
 
-        $totalKelas = $this->db->table('guru_kelas')->where('guru_id', $guruId)->countAllResults();
         $totalMapel = $this->db->table('guru_mapel')->where('guru_id', $guruId)->countAllResults();
         $totalSoal = $this->db->table('soal')->where('guru_id', $guruId)->countAllResults();
-        $totalUjian = $this->db->table('jadwal_ujian')->where('guru_id', $guruId)->countAllResults();
+        
+        $sekolahSaya = $this->db->table('guru')
+            ->select('sekolah.nama_sekolah')
+            ->join('sekolah', 'sekolah.id = guru.sekolah_id', 'left')
+            ->where('guru.id', $guruId)
+            ->get()->getRowArray();
 
         $data = [
-            'title' => 'Dashboard Guru',
-            'total_kelas' => $totalKelas,
+            'title' => 'Dashboard Pembuat Soal',
             'total_mapel' => $totalMapel,
             'total_soal' => $totalSoal,
-            'total_ujian' => $totalUjian
+            'sekolah_saya' => $sekolahSaya
         ];
 
         return view('guru/dashboard', $data);
