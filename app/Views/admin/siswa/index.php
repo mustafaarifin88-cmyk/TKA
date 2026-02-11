@@ -62,7 +62,7 @@
                                 <th class="text-center" width="5%">No</th>
                                 <th width="10%">Foto</th>
                                 <th>Informasi Siswa</th>
-                                <th>Kelas</th>
+                                <th>Sekolah Asal</th>
                                 <th>Username</th>
                                 <th class="text-center" width="15%">Aksi</th>
                             </tr>
@@ -84,7 +84,7 @@
                                     </td>
                                     <td>
                                         <span class="badge bg-light-info text-info fw-bold px-3 py-2">
-                                            <?= $s['nama_kelas'] ?>
+                                            <i class="bi bi-building me-1"></i> <?= $s['nama_sekolah'] ?>
                                         </span>
                                     </td>
                                     <td>
@@ -112,7 +112,6 @@
     </section>
 </div>
 
-<!-- Modal Import Excel -->
 <div class="modal fade text-left" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content shadow">
@@ -128,7 +127,6 @@
                 <?= csrf_field() ?>
                 <div class="modal-body">
                     
-                    <!-- AREA DOWNLOAD TEMPLATE -->
                     <div class="d-grid mb-4">
                         <a href="<?= base_url('admin/siswa/download_template') ?>" class="btn btn-info text-white shadow-sm">
                             <i class="bi bi-download me-2"></i> Download Template Excel
@@ -137,7 +135,7 @@
                     </div>
 
                     <div class="alert alert-light-primary color-primary mb-4 text-sm">
-                        <i class="bi bi-info-circle-fill me-2"></i> <b>Penting:</b> Kolom "Nama Kelas" di Excel harus sama persis dengan nama kelas yang ada di menu Data Kelas.
+                        <i class="bi bi-info-circle-fill me-2"></i> <b>Penting:</b> Pilih nama sekolah melalui dropdown di dalam file Excel.
                     </div>
                     
                     <div class="mb-3">

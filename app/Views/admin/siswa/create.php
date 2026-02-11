@@ -49,11 +49,11 @@
                                 <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control" value="<?= old('nama_lengkap') ?>" required>
                             </div>
                             <div class="form-group mb-3">
-                                <label for="kelas_id" class="form-label">Kelas</label>
-                                <select name="kelas_id" id="kelas_id" class="form-select" required>
-                                    <option value="">-- Pilih Kelas --</option>
-                                    <?php foreach ($kelas as $k) : ?>
-                                        <option value="<?= $k['id'] ?>" <?= old('kelas_id') == $k['id'] ? 'selected' : '' ?>><?= $k['nama_kelas'] ?></option>
+                                <label for="sekolah_id" class="form-label">Sekolah Asal</label>
+                                <select name="sekolah_id" id="sekolah_id" class="form-select" required>
+                                    <option value="">-- Pilih Sekolah --</option>
+                                    <?php foreach ($sekolah as $s) : ?>
+                                        <option value="<?= $s['id'] ?>" <?= old('sekolah_id') == $s['id'] ? 'selected' : '' ?>><?= $s['nama_sekolah'] ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -69,7 +69,7 @@
                             </div>
                             <div class="form-group mb-3">
                                 <label for="foto" class="form-label">Foto Profil (Opsional)</label>
-                                <input type="file" name="foto" id="foto" class="form-control">
+                                <input type="file" name="foto" id="foto" class="form-control" accept="image/*">
                             </div>
                         </div>
                     </div>

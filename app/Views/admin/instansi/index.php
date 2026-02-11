@@ -5,14 +5,14 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Manajemen Instansi / Sekolah</h3>
-                <p class="text-subtitle text-muted">Kelola data sekolah yang terdaftar dalam sistem.</p>
+                <h3>Profil Instansi</h3>
+                <p class="text-subtitle text-muted">Pengaturan identitas induk aplikasi (Kop Surat & Logo Utama).</p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Instansi</li>
+                        <li class="breadcrumb-item active" aria-current="page">Profil Instansi</li>
                     </ol>
                 </nav>
             </div>
@@ -21,126 +21,105 @@
 </div>
 
 <div class="page-content">
-    <section class="section">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom">
-                <h5 class="card-title m-0">Daftar Sekolah</h5>
-                <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#modalAdd">
-                    <i class="bi bi-plus-lg me-1"></i> Tambah Instansi
-                </button>
-            </div>
-            <div class="card-body pt-4">
-                <?php if (session()->getFlashdata('success')) : ?>
-                    <div class="alert alert-light-success color-success alert-dismissible show fade">
-                        <i class="bi bi-check-circle me-2"></i> <?= session()->getFlashdata('success') ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
-
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle" id="table-instansi">
-                        <thead class="bg-light">
-                            <tr>
-                                <th width="5%" class="text-center">No</th>
-                                <th>Nama Sekolah</th>
-                                <th>NPSN</th>
-                                <th>Alamat</th>
-                                <th width="15%" class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($instansi as $index => $row) : ?>
-                                <tr>
-                                    <td class="text-center"><?= $index + 1 ?></td>
-                                    <td class="fw-bold"><?= $row['nama_sekolah'] ?></td>
-                                    <td><span class="badge bg-light-secondary text-dark"><?= $row['npsn'] ?></span></td>
-                                    <td><?= $row['alamat'] ?></td>
-                                    <td class="text-center">
-                                        <button class="btn btn-sm btn-outline-warning rounded-pill me-1" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#modalEdit<?= $row['id'] ?>" 
-                                                title="Edit">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <form action="<?= base_url('admin/instansi/' . $row['id']) ?>" method="post" class="d-inline">
-                                            <?= csrf_field() ?>
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Hapus instansi ini?')" title="Hapus">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-
-                                <div class="modal fade" id="modalEdit<?= $row['id'] ?>" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Edit Instansi</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <form action="<?= base_url('admin/instansi/update/' . $row['id']) ?>" method="post">
-                                                <?= csrf_field() ?>
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Nama Sekolah</label>
-                                                        <input type="text" name="nama_sekolah" class="form-control" value="<?= $row['nama_sekolah'] ?>" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">NPSN</label>
-                                                        <input type="text" name="npsn" class="form-control" value="<?= $row['npsn'] ?>" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Alamat</label>
-                                                        <textarea name="alamat" class="form-control" rows="3" required><?= $row['alamat'] ?></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Batal</button>
-                                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom py-3">
+            <h5 class="card-title m-0"><i class="bi bi-building-gear me-2"></i> Edit Data Instansi</h5>
         </div>
-    </section>
-</div>
+        <div class="card-body pt-4">
+            
+            <?php if (session()->getFlashdata('success')) : ?>
+                <div class="alert alert-success alert-dismissible show fade">
+                    <i class="bi bi-check-circle me-2"></i> <?= session()->getFlashdata('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
 
-<div class="modal fade" id="modalAdd" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title text-white">Tambah Instansi Baru</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="<?= base_url('admin/instansi/store') ?>" method="post">
+            <?php if (session()->getFlashdata('errors')) : ?>
+                <div class="alert alert-danger alert-dismissible show fade">
+                    <ul class="mb-0">
+                        <?php foreach (session()->getFlashdata('errors') as $error) : ?>
+                            <li><?= $error ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <form action="<?= base_url('admin/instansi/update') ?>" method="post" enctype="multipart/form-data">
                 <?= csrf_field() ?>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Nama Sekolah</label>
-                        <input type="text" name="nama_sekolah" class="form-control" placeholder="Contoh: SMA Negeri 1 Jakarta" required>
+                
+                <div class="row">
+                    <div class="col-md-4 text-center mb-4 mb-md-0 border-end">
+                        <label class="form-label fw-bold d-block mb-3">Logo Instansi</label>
+                        <div class="avatar avatar-xl bg-light shadow-sm mb-3 position-relative" style="width: 180px; height: 180px; margin: 0 auto;">
+                            <img src="<?= base_url('uploads/sekolah/' . ($instansi['logo'] ?? 'default_logo.png')) ?>" 
+                                 alt="Logo" style="object-fit: contain; padding: 10px; width: 100%; height: 100%;" id="logoPreview">
+                        </div>
+                        <div class="px-4">
+                            <input type="file" name="logo" class="form-control form-control-sm mt-2" accept="image/*" onchange="previewImage(this)">
+                            <small class="text-muted d-block mt-2" style="font-size: 0.8rem;">
+                                <i class="bi bi-info-circle"></i> Format: JPG/PNG, Max 2MB. Logo ini akan tampil di halaman login dan kop laporan.
+                            </small>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">NPSN</label>
-                        <input type="text" name="npsn" class="form-control" placeholder="Masukkan NPSN" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Alamat</label>
-                        <textarea name="alamat" class="form-control" rows="3" placeholder="Alamat lengkap sekolah..." required></textarea>
+
+                    <div class="col-md-8 ps-md-4">
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold">Nama Instansi / Dinas</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-bank"></i></span>
+                                <input type="text" name="nama_instansi" class="form-control" 
+                                       value="<?= old('nama_instansi', $instansi['nama_instansi'] ?? '') ?>" 
+                                       placeholder="Contoh: Dinas Pendidikan Kota Pekanbaru" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Kota / Kabupaten</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                    <input type="text" name="kota" class="form-control" 
+                                           value="<?= old('kota', $instansi['kota'] ?? '') ?>" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Kode Pos</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-postcard"></i></span>
+                                    <input type="text" name="kode_pos" class="form-control" 
+                                           value="<?= old('kode_pos', $instansi['kode_pos'] ?? '') ?>" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label class="form-label fw-bold">Alamat Lengkap</label>
+                            <textarea name="alamat" class="form-control" rows="4" required placeholder="Jl. ..."><?= old('alamat', $instansi['alamat'] ?? '') ?></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary px-5 shadow-sm">
+                                <i class="bi bi-save me-2"></i> Simpan Perubahan
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </div>
+
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('logoPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 <?= $this->endSection(); ?>

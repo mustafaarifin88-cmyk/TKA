@@ -7,9 +7,9 @@
 <div class="page-content">
     <section class="row">
         <div class="col-12 col-lg-12">
-            <div class="alert alert-primary">
+            <div class="alert alert-light-primary color-primary">
                 <h4 class="alert-heading">Selamat Datang, <?= session()->get('nama_lengkap'); ?>!</h4>
-                <p>Anda login sebagai Administrator. Di sini Anda dapat mengelola data master sekolah, guru, siswa, dan pengaturan ujian.</p>
+                <p>Anda login sebagai Administrator. Berikut adalah ringkasan data sistem ujian berbasis sekolah/instansi.</p>
             </div>
             
             <div class="row">
@@ -19,12 +19,12 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="stats-icon purple">
-                                        <i class="bi bi-person-badge-fill"></i>
+                                        <i class="bi bi-building-fill"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Total Guru</h6>
-                                    <h6 class="font-extrabold mb-0"><?= $total_guru; ?></h6>
+                                    <h6 class="text-muted font-semibold">Total Sekolah</h6>
+                                    <h6 class="font-extrabold mb-0"><?= $total_sekolah ?? 0 ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -36,12 +36,12 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="stats-icon blue">
-                                        <i class="bi bi-people-fill"></i>
+                                        <i class="bi bi-person-badge-fill"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Total Siswa</h6>
-                                    <h6 class="font-extrabold mb-0"><?= $total_siswa; ?></h6>
+                                    <h6 class="text-muted font-semibold">Pembuat Soal</h6>
+                                    <h6 class="font-extrabold mb-0"><?= $total_pembuat_soal ?? 0 ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -53,12 +53,12 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="stats-icon green">
-                                        <i class="bi bi-house-door-fill"></i>
+                                        <i class="bi bi-people-fill"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Total Kelas</h6>
-                                    <h6 class="font-extrabold mb-0"><?= $total_kelas; ?></h6>
+                                    <h6 class="text-muted font-semibold">Total Siswa</h6>
+                                    <h6 class="font-extrabold mb-0"><?= $total_siswa ?? 0 ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <h6 class="text-muted font-semibold">Mata Pelajaran</h6>
-                                    <h6 class="font-extrabold mb-0"><?= $total_mapel; ?></h6>
+                                    <h6 class="font-extrabold mb-0"><?= $total_mapel ?? 0 ?></h6>
                                 </div>
                             </div>
                         </div>

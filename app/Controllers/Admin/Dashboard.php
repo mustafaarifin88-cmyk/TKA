@@ -3,26 +3,19 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-use App\Models\GuruModel;
-use App\Models\SiswaModel;
-use App\Models\KelasModel;
-use App\Models\MapelModel;
 
 class Dashboard extends BaseController
 {
     public function index()
     {
-        $guruModel = new GuruModel();
-        $siswaModel = new SiswaModel();
-        $kelasModel = new KelasModel();
-        $mapelModel = new MapelModel();
+        $db = \Config\Database::connect();
 
         $data = [
             'title' => 'Dashboard Admin',
-            'total_guru' => $guruModel->countAll(),
-            'total_siswa' => $siswaModel->countAll(),
-            'total_kelas' => $kelasModel->countAll(),
-            'total_mapel' => $mapelModel->countAll(),
+            'total_sekolah' => $db->table('sekolah')->countAll(),
+            'total_pembuat_soal' => $db->table('guru')->countAll(),
+            'total_siswa' => $db->table('siswa')->countAll(),
+            'total_mapel' => $db->table('mapel')->countAll(),
         ];
 
         return view('admin/dashboard', $data);

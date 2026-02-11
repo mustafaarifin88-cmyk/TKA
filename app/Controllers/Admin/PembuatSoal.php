@@ -22,9 +22,8 @@ class PembuatSoal extends BaseController
 
     public function index()
     {
-        $users = $this->guruModel->select('guru.*, sekolah.nama_sekolah')
-            ->join('sekolah', 'sekolah.id = guru.sekolah_id', 'left')
-            ->findAll();
+        // Tidak perlu join ke sekolah lagi
+        $users = $this->guruModel->findAll();
 
         $data = [
             'title' => 'Data Pembuat Soal',
@@ -37,7 +36,7 @@ class PembuatSoal extends BaseController
     {
         $data = [
             'title' => 'Tambah Pembuat Soal',
-            'sekolah' => $this->db->table('sekolah')->get()->getResultArray(),
+            // 'sekolah' tidak lagi dikirim
             'mapel' => $this->db->table('mapel')->get()->getResultArray(),
             'validation' => \Config\Services::validation()
         ];
@@ -50,7 +49,7 @@ class PembuatSoal extends BaseController
             'nama_lengkap' => 'required',
             'username' => 'required|is_unique[guru.username]',
             'password' => 'required|min_length[6]',
-            'sekolah_id' => 'required'
+            // 'sekolah_id' => 'required' // Dihapus
         ])) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
@@ -66,7 +65,7 @@ class PembuatSoal extends BaseController
             'nama_lengkap' => $this->request->getPost('nama_lengkap'),
             'username' => $this->request->getPost('username'),
             'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'sekolah_id' => $this->request->getPost('sekolah_id'),
+            'sekolah_id' => null, // Set null karena tidak terikat sekolah
             'foto' => $fotoName
         ];
 
@@ -97,7 +96,7 @@ class PembuatSoal extends BaseController
         $data = [
             'title' => 'Edit Pembuat Soal',
             'user' => $user,
-            'sekolah' => $this->db->table('sekolah')->get()->getResultArray(),
+            // 'sekolah' tidak dikirim
             'mapel' => $this->db->table('mapel')->get()->getResultArray(),
             'selected_mapel' => array_column($guruMapel, 'mapel_id'),
             'validation' => \Config\Services::validation()
@@ -110,7 +109,7 @@ class PembuatSoal extends BaseController
         if (!$this->validate([
             'nama_lengkap' => 'required',
             'username' => "required|is_unique[guru.username,id,$id]",
-            'sekolah_id' => 'required'
+            // 'sekolah_id' => 'required' // Dihapus
         ])) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
@@ -130,7 +129,7 @@ class PembuatSoal extends BaseController
         $dataUpdate = [
             'nama_lengkap' => $this->request->getPost('nama_lengkap'),
             'username' => $this->request->getPost('username'),
-            'sekolah_id' => $this->request->getPost('sekolah_id'),
+            // 'sekolah_id' tidak diupdate
             'foto' => $fotoName
         ];
 
@@ -186,11 +185,7 @@ class PembuatSoal extends BaseController
                 $insertData = [];
                 $skippedRows = 0;
                 
-                $allSekolah = $this->db->table('sekolah')->get()->getResultArray();
-                $sekolahMap = [];
-                foreach ($allSekolah as $s) {
-                    $sekolahMap[strtolower(trim($s['nama_sekolah']))] = $s['id'];
-                }
+                // Tidak perlu ambil data sekolah
 
                 foreach ($data as $key => $row) {
                     if ($key == 0) continue; 
@@ -200,19 +195,13 @@ class PembuatSoal extends BaseController
                         continue;
                     }
 
-                    $namaSekolahInput = isset($row[3]) ? strtolower(trim($row[3])) : '';
-                    $sekolahId = $sekolahMap[$namaSekolahInput] ?? null;
-
-                    if (!$sekolahId) {
-                        $skippedRows++;
-                        continue;
-                    }
+                    // Hapus logika mapping sekolah
 
                     $insertData[] = [
                         'nama_lengkap' => $row[0],
                         'username'     => $row[1],
                         'password'     => password_hash((string)($row[2] ?? '123456'), PASSWORD_DEFAULT),
-                        'sekolah_id'   => $sekolahId,
+                        'sekolah_id'   => null, // Set Null
                         'foto'         => 'default.jpg'
                     ];
                 }
@@ -221,13 +210,10 @@ class PembuatSoal extends BaseController
                     $this->guruModel->ignore(true)->insertBatch($insertData);
                     
                     $msg = count($insertData) . ' Data pembuat soal berhasil diimport.';
-                    if ($skippedRows > 0) {
-                        $msg .= ' (' . $skippedRows . ' data dilewati karena format salah atau sekolah tidak ditemukan).';
-                    }
                     return redirect()->to('admin/pembuat_soal')->with('success', $msg);
                 }
 
-                return redirect()->back()->with('error', 'Tidak ada data valid yang dapat dibaca. Pastikan Nama Sekolah sesuai.');
+                return redirect()->back()->with('error', 'Tidak ada data valid yang dapat dibaca.');
 
             } catch (\Exception $e) {
                 return redirect()->back()->with('error', 'Gagal import: ' . $e->getMessage());
@@ -244,35 +230,13 @@ class PembuatSoal extends BaseController
         }
 
         $spreadsheet = new Spreadsheet();
-        
-        $dataSekolah = $this->db->table('sekolah')->get()->getResultArray();
-        
-        if (empty($dataSekolah)) {
-            return redirect()->back()->with('error', 'Buat data sekolah terlebih dahulu.');
-        }
-
-        $sheetOptions = $spreadsheet->createSheet();
-        $sheetOptions->setTitle('DataSekolahHidden');
-        $sheetOptions->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
-
-        $rowCount = 1;
-        foreach ($dataSekolah as $s) {
-            $cleanName = trim($s['nama_sekolah']); 
-            $sheetOptions->setCellValue('A' . $rowCount, $cleanName);
-            $rowCount++;
-        }
-        
-        $lastRow = $rowCount - 1;
-        $formulaList = "DataSekolahHidden!$" . "A$1:$" . "A$" . $lastRow;
-
-        $spreadsheet->setActiveSheetIndex(0);
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Template Import');
 
         $sheet->setCellValue('A1', 'Nama Lengkap (Wajib)');
         $sheet->setCellValue('B1', 'Username (Wajib & Unik)');
         $sheet->setCellValue('C1', 'Password (Default: 123456)');
-        $sheet->setCellValue('D1', 'Nama Sekolah (Pilih dari List)');
+        // Kolom Sekolah dihapus
 
         $headerStyle = [
             'font' => ['bold' => true],
@@ -286,25 +250,13 @@ class PembuatSoal extends BaseController
                 ],
             ],
         ];
-        $sheet->getStyle('A1:D1')->applyFromArray($headerStyle);
-
-        for ($i = 2; $i <= 100; $i++) {
-            $validation = $sheet->getCell("D$i")->getDataValidation();
-            $validation->setType(DataValidation::TYPE_LIST);
-            $validation->setErrorStyle(DataValidation::STYLE_STOP);
-            $validation->setAllowBlank(false);
-            $validation->setShowInputMessage(true);
-            $validation->setShowErrorMessage(true);
-            $validation->setShowDropDown(true);
-            $validation->setFormula1($formulaList);
-        }
+        $sheet->getStyle('A1:C1')->applyFromArray($headerStyle);
 
         $sheet->setCellValue('A2', 'Budi Santoso');
         $sheet->setCellValue('B2', 'budi01');
         $sheet->setCellValue('C2', '123456');
-        $sheet->setCellValue('D2', $dataSekolah[0]['nama_sekolah'] ?? '');
 
-        foreach(range('A','D') as $columnID) {
+        foreach(range('A','C') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
 

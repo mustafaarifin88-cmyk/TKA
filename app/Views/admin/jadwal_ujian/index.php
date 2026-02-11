@@ -5,8 +5,8 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Jadwal Ujian</h3>
-                <p class="text-subtitle text-muted">Atur dan pantau jadwal pelaksanaan ujian.</p>
+                <h3>Manajemen Jadwal Ujian</h3>
+                <p class="text-subtitle text-muted">Atur waktu dan durasi pelaksanaan ujian untuk setiap sekolah.</p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -22,118 +22,95 @@
 
 <div class="page-content">
     <section class="section">
-        <div class="card shadow-sm">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h5 class="card-title m-0">Data Jadwal Ujian</h5>
-                <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#modalAdd">
-                    <i class="bi bi-plus-circle me-1"></i> Tambah Jadwal
-                </button>
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                <h5 class="card-title m-0 text-primary">
+                    <i class="bi bi-calendar-week-fill me-2"></i> Daftar Jadwal Aktif
+                </h5>
+                <a href="<?= base_url('admin/jadwal/create') ?>" class="btn btn-primary shadow-sm rounded-pill px-4">
+                    <i class="bi bi-plus-lg me-1"></i> Buat Jadwal Baru
+                </a>
             </div>
-            <div class="card-body">
+            <div class="card-body pt-4">
                 <?php if (session()->getFlashdata('success')) : ?>
-                    <div class="alert alert-light-success color-success alert-dismissible show fade">
-                        <i class="bi bi-check-circle me-2"></i> <?= session()->getFlashdata('success') ?>
+                    <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                            <span><?= session()->getFlashdata('success') ?></span>
+                        </div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 <?php endif; ?>
 
                 <div class="table-responsive">
-                    <table class="table table-hover table-lg" id="table-jadwal">
-                        <thead>
+                    <table class="table table-hover align-middle" id="table1">
+                        <thead class="bg-light">
                             <tr>
-                                <th>No</th>
-                                <th>Mata Pelajaran</th>
-                                <th>Kelas</th>
-                                <th>Tanggal</th>
-                                <th>Waktu</th>
-                                <th>Durasi</th>
-                                <th class="text-center">Aksi</th>
+                                <th class="text-center" width="5%">No</th>
+                                <th width="25%">Detail Akademik</th>
+                                <th width="25%">Waktu Pelaksanaan</th>
+                                <th class="text-center">Durasi</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center" width="15%">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($jadwal as $i => $row) : ?>
+                            <?php foreach ($jadwal as $key => $j) : ?>
                                 <tr>
-                                    <td><?= $i + 1 ?></td>
+                                    <td class="text-center fw-bold text-muted"><?= $key + 1 ?></td>
                                     <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar bg-primary me-3">
-                                                <span class="avatar-content"><?= substr($row['nama_mapel'], 0, 1) ?></span>
-                                            </div>
-                                            <div>
-                                                <span class="fw-bold"><?= $row['nama_mapel'] ?></span><br>
-                                                <small class="text-muted"><?= $row['kode_ujian'] ?></small>
-                                            </div>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold text-dark mb-1"><?= $j['nama_mapel'] ?></span>
+                                            <span class="badge bg-light-info text-info w-auto align-self-start">
+                                                <i class="bi bi-building-fill me-1"></i> <?= $j['nama_sekolah'] ?>
+                                            </span>
                                         </div>
                                     </td>
-                                    <td><?= $row['nama_kelas'] ?></td>
-                                    <td><?= date('d/m/Y', strtotime($row['tanggal'])) ?></td>
-                                    <td><?= date('H:i', strtotime($row['jam_mulai'])) ?> - <?= date('H:i', strtotime($row['jam_selesai'])) ?></td>
-                                    <td><span class="badge bg-light-info text-info"><?= $row['durasi'] ?> Menit</span></td>
-                                    <td class="text-center">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#modalEdit<?= $row['id'] ?>">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <form action="<?= base_url('admin/jadwal_ujian/' . $row['id']) ?>" method="post" class="d-inline">
-                                                <?= csrf_field() ?>
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Apakah anda yakin?')">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="text-dark mb-1">
+                                                <i class="bi bi-calendar-event me-2 text-primary"></i>
+                                                <?= date('d M Y', strtotime($j['tanggal_ujian'])) ?>
+                                            </span>
+                                            <span class="text-muted small">
+                                                <i class="bi bi-clock me-2 text-warning"></i>
+                                                Mulai: <?= date('H:i', strtotime($j['jam_mulai'])) ?> WIB
+                                            </span>
                                         </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-light-secondary text-secondary border border-secondary rounded-pill px-3">
+                                            <i class="bi bi-stopwatch me-1"></i> <?= $j['lama_ujian'] ?> Menit
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php 
+                                            $waktuUjian = strtotime($j['tanggal_ujian'] . ' ' . $j['jam_mulai']);
+                                            $waktuSelesai = $waktuUjian + ($j['lama_ujian'] * 60);
+                                            $sekarang = time();
+                                        ?>
+                                        
+                                        <?php if ($sekarang > $waktuSelesai) : ?>
+                                            <span class="badge bg-secondary">Selesai</span>
+                                        <?php elseif ($sekarang >= $waktuUjian && $sekarang <= $waktuSelesai) : ?>
+                                            <span class="badge bg-success spinner-grow-sm">
+                                                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                                Berlangsung
+                                            </span>
+                                        <?php else : ?>
+                                            <span class="badge bg-info">Terjadwal</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="<?= base_url('admin/jadwal/delete/' . $j['id']) ?>" 
+                                           onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ujian ini? Data nilai siswa terkait mungkin akan hilang.')" 
+                                           class="btn btn-sm btn-danger shadow-sm" 
+                                           data-bs-toggle="tooltip" 
+                                           title="Hapus Jadwal">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
                                     </td>
                                 </tr>
-
-                                <div class="modal fade" id="modalEdit<?= $row['id'] ?>" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Edit Jadwal Ujian</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <form action="<?= base_url('admin/jadwal_ujian/update/' . $row['id']) ?>" method="post">
-                                                <?= csrf_field() ?>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-3">
-                                                            <label class="form-label">Mata Pelajaran</label>
-                                                            <select name="mapel_id" class="form-select" required>
-                                                                <?php foreach ($mapel as $m) : ?>
-                                                                    <option value="<?= $m['id'] ?>" <?= ($m['id'] == $row['mapel_id']) ? 'selected' : '' ?>><?= $m['nama_mapel'] ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-6 mb-3">
-                                                            <label class="form-label">Kelas</label>
-                                                            <select name="kelas_id" class="form-select" required>
-                                                                <?php foreach ($kelas as $k) : ?>
-                                                                    <option value="<?= $k['id'] ?>" <?= ($k['id'] == $row['kelas_id']) ? 'selected' : '' ?>><?= $k['nama_kelas'] ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-4 mb-3">
-                                                            <label class="form-label">Tanggal</label>
-                                                            <input type="date" name="tanggal" class="form-control" value="<?= $row['tanggal'] ?>" required>
-                                                        </div>
-                                                        <div class="col-md-4 mb-3">
-                                                            <label class="form-label">Jam Mulai</label>
-                                                            <input type="time" name="jam_mulai" class="form-control" value="<?= $row['jam_mulai'] ?>" required>
-                                                        </div>
-                                                        <div class="col-md-4 mb-3">
-                                                            <label class="form-label">Durasi (Menit)</label>
-                                                            <input type="number" name="durasi" class="form-control" value="<?= $row['durasi'] ?>" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Tutup</button>
-                                                    <button type="submit" class="btn btn-primary">Update Jadwal</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -143,59 +120,12 @@
     </section>
 </div>
 
-<div class="modal fade" id="modalAdd" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white">Tambah Jadwal Baru</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="<?= base_url('admin/jadwal_ujian/store') ?>" method="post">
-                <?= csrf_field() ?>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Mata Pelajaran</label>
-                            <select name="mapel_id" class="form-select" required>
-                                <option value="">-- Pilih Mapel --</option>
-                                <?php foreach ($mapel as $m) : ?>
-                                    <option value="<?= $m['id'] ?>"><?= $m['nama_mapel'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Kelas</label>
-                            <select name="kelas_id" class="form-select" required>
-                                <option value="">-- Pilih Kelas --</option>
-                                <?php foreach ($kelas as $k) : ?>
-                                    <option value="<?= $k['id'] ?>"><?= $k['nama_kelas'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Tanggal</label>
-                            <input type="date" name="tanggal" class="form-control" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Jam Mulai</label>
-                            <input type="time" name="jam_mulai" class="form-control" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Durasi (Menit)</label>
-                            <input type="number" name="durasi" class="form-control" placeholder="60" required>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Token Ujian (Opsional)</label>
-                            <input type="text" name="token" class="form-control" placeholder="Biarkan kosong untuk generate otomatis">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Jadwal</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<script src="<?= base_url('assets/extensions/simple-datatables/umd/simple-datatables.js') ?>"></script>
+<script src="<?= base_url('assets/static/js/pages/simple-datatables.js') ?>"></script>
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
 <?= $this->endSection(); ?>
