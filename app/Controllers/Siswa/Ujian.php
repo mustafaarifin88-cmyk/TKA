@@ -83,7 +83,8 @@ class Ujian extends BaseController
             'jadwal' => $jadwal,
             'soal' => $soal,
             'jawaban' => $jawabanArr,
-            'siswa' => $this->db->table('siswa')->find($siswaId)
+            // PERBAIKAN: Menggunakan get()->getRowArray() karena Query Builder tidak punya find()
+            'siswa' => $this->db->table('siswa')->where('id', $siswaId)->get()->getRowArray()
         ];
 
         return view('siswa/ujian/index', $data);
@@ -269,7 +270,8 @@ class Ujian extends BaseController
             'jadwal' => $jadwal,
             'soal' => $soalList,
             'jawaban' => $mapJawaban,
-            'siswa' => $this->db->table('siswa')->find($siswaId)
+            // PERBAIKAN: Menggunakan get()->getRowArray()
+            'siswa' => $this->db->table('siswa')->where('id', $siswaId)->get()->getRowArray()
         ];
 
         session()->remove('jadwal_id_aktif');
