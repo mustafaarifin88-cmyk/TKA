@@ -35,7 +35,7 @@ class Ujian extends BaseController
         }
 
         $jadwal = $this->jadwalModel
-            ->select('jadwal_ujian.*, mapel.nama_mapel, sekolah.nama_sekolah')
+            ->select('jadwal_ujian.*, mapel.nama_mapel, sekolah.nama_sekolah, sekolah.logo')
             ->join('mapel', 'mapel.id = jadwal_ujian.mapel_id')
             ->join('sekolah', 'sekolah.id = jadwal_ujian.sekolah_id')
             ->find($jadwalId);
@@ -62,11 +62,25 @@ class Ujian extends BaseController
             ]);
         }
 
+        // Ambil semua soal
         $soal = $this->soalModel
             ->where('guru_id', $jadwal['guru_id'])
             ->where('mapel_id', $jadwal['mapel_id'])
-            ->orderBy('id', 'ASC')
             ->findAll();
+
+        // LOGIKA SORTING: Soal Esai diletakkan paling belakang
+        usort($soal, function($a, $b) {
+            $isEsaiA = ($a['jenis'] === 'esai') ? 1 : 0;
+            $isEsaiB = ($b['jenis'] === 'esai') ? 1 : 0;
+
+            // Jika sama-sama esai atau sama-sama bukan esai, urutkan berdasarkan ID (urutan buat)
+            if ($isEsaiA === $isEsaiB) {
+                return $a['id'] <=> $b['id'];
+            }
+
+            // Jika beda, yang esai (nilai 1) ditaruh di belakang yang bukan esai (nilai 0)
+            return $isEsaiA <=> $isEsaiB;
+        });
 
         $jawabanSiswa = $this->jawabanModel
             ->where('jadwal_id', $jadwalId)
@@ -83,7 +97,6 @@ class Ujian extends BaseController
             'jadwal' => $jadwal,
             'soal' => $soal,
             'jawaban' => $jawabanArr,
-            // PERBAIKAN: Menggunakan get()->getRowArray() karena Query Builder tidak punya find()
             'siswa' => $this->db->table('siswa')->where('id', $siswaId)->get()->getRowArray()
         ];
 
@@ -249,10 +262,21 @@ class Ujian extends BaseController
              ->join('sekolah', 'sekolah.id = jadwal_ujian.sekolah_id')
              ->find($jadwalId);
 
+        // Ambil daftar soal
         $soalList = $this->soalModel
             ->where('guru_id', $jadwal['guru_id'])
             ->where('mapel_id', $jadwal['mapel_id'])
             ->findAll();
+
+        // TERAPKAN SORTING YANG SAMA (Esai Paling Belakang)
+        usort($soalList, function($a, $b) {
+            $isEsaiA = ($a['jenis'] === 'esai') ? 1 : 0;
+            $isEsaiB = ($b['jenis'] === 'esai') ? 1 : 0;
+            if ($isEsaiA === $isEsaiB) {
+                return $a['id'] <=> $b['id'];
+            }
+            return $isEsaiA <=> $isEsaiB;
+        });
 
         $jawabanList = $this->jawabanModel
             ->where('jadwal_id', $jadwalId)
@@ -270,7 +294,6 @@ class Ujian extends BaseController
             'jadwal' => $jadwal,
             'soal' => $soalList,
             'jawaban' => $mapJawaban,
-            // PERBAIKAN: Menggunakan get()->getRowArray()
             'siswa' => $this->db->table('siswa')->where('id', $siswaId)->get()->getRowArray()
         ];
 
