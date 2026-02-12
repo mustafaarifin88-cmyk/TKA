@@ -1,42 +1,42 @@
 <?= $this->extend('layouts/ujian'); ?>
 
 <?= $this->section('content'); ?>
-<!-- Header Ujian (Login Style) -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top" style="height: 80px;">
+<!-- Header Ujian (Biru/Primary) -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top" style="height: 80px;">
     <div class="container-fluid px-4">
         <!-- Logo & Identitas Sekolah -->
         <a class="navbar-brand d-flex align-items-center" href="#">
             <?php if (!empty($jadwal['logo']) && file_exists('uploads/sekolah/' . $jadwal['logo'])) : ?>
-                <img src="<?= base_url('uploads/sekolah/' . $jadwal['logo']) ?>" alt="Logo" style="height: 50px;" class="me-3">
+                <img src="<?= base_url('uploads/sekolah/' . $jadwal['logo']) ?>" alt="Logo" style="height: 50px;" class="me-3 bg-white rounded-circle p-1">
             <?php else: ?>
-                <img src="<?= base_url('assets/static/images/logo/logo.png') ?>" alt="Logo" style="height: 50px;" class="me-3">
+                <img src="<?= base_url('assets/static/images/logo/logo.png') ?>" alt="Logo" style="height: 50px;" class="me-3 bg-white rounded-circle p-1">
             <?php endif; ?>
             <div class="d-flex flex-column">
-                <span class="fw-bold text-primary" style="line-height: 1.1; font-size: 1.1rem;"><?= $jadwal['nama_sekolah'] ?></span>
-                <span class="text-muted small" style="font-size: 0.8rem;"><?= $jadwal['nama_mapel'] ?></span>
+                <span class="fw-bold text-white" style="line-height: 1.1; font-size: 1.1rem;"><?= $jadwal['nama_sekolah'] ?></span>
+                <span class="text-white-50 small" style="font-size: 0.8rem;"><?= $jadwal['nama_mapel'] ?></span>
             </div>
         </a>
 
         <!-- Tools Kanan: Timer, Daftar Soal, Nama -->
         <div class="d-flex align-items-center gap-3">
             
-            <!-- Timer Box -->
-            <div class="bg-primary bg-opacity-10 px-3 py-2 rounded-3 border border-primary border-opacity-25 text-center" style="min-width: 110px;">
-                <small class="d-block text-primary fw-bold text-uppercase" style="font-size: 0.65rem; line-height: 1;">Sisa Waktu</small>
-                <span id="timer" class="fw-bold fs-5 text-primary" style="line-height: 1.1;">00:00:00</span>
+            <!-- Timer Box (Putih agar kontras di biru) -->
+            <div class="bg-white px-3 py-2 rounded-3 text-center shadow-sm" style="min-width: 110px;">
+                <small class="d-block text-muted fw-bold text-uppercase" style="font-size: 0.65rem; line-height: 1;">Sisa Waktu</small>
+                <span id="timer" class="fw-bold fs-5 text-dark" style="line-height: 1.1;">00:00:00</span>
             </div>
 
             <!-- Tombol Daftar Soal (Popup) -->
-            <button class="btn btn-outline-dark shadow-sm position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSoal">
+            <button class="btn btn-outline-light shadow-sm position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSoal">
                 <i class="bi bi-grid-3x3-gap-fill"></i> 
                 <span class="d-none d-md-inline ms-1">Daftar Soal</span>
                 <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" id="badge-not-answered" title="Belum dijawab"></span>
             </button>
 
             <!-- Info Peserta (Desktop) -->
-            <div class="d-none d-lg-block text-end ms-2 border-start ps-3">
-                <div class="fw-bold text-dark text-truncate" style="max-width: 150px;"><?= $siswa['nama_lengkap'] ?></div>
-                <div class="text-muted small">Peserta Ujian</div>
+            <div class="d-none d-lg-block text-end ms-2 border-start border-white border-opacity-50 ps-3 text-white">
+                <div class="fw-bold text-truncate" style="max-width: 150px;"><?= $siswa['nama_lengkap'] ?></div>
+                <div class="text-white-50 small">Peserta Ujian</div>
             </div>
         </div>
     </div>
@@ -51,7 +51,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
                     <span class="badge bg-primary fs-6 px-3 py-2 rounded-pill shadow-sm">Soal No. <span id="nomor-soal-display">1</span></span>
-                    <span class="ms-auto text-muted small"><i class="bi bi-info-circle me-1"></i> Perhatikan soal dengan teliti</span>
+                    <span class="ms-auto text-muted small"><i class="bi bi-info-circle me-1"></i> Baca soal dengan teliti</span>
                 </div>
                 
                 <div class="card-body overflow-auto bg-light bg-opacity-25" style="max-height: 80vh; font-size: 1.15rem; line-height: 1.8;">
