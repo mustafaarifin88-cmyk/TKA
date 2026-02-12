@@ -5,8 +5,8 @@
 <nav class="navbar navbar-dark bg-primary shadow-sm mb-4" style="height: 80px;">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="#">
-            <!-- Logo SD dari Link Eksternal -->
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhQFOXlcj2tOqNuOKDC35tPNB_BcLIc8mnUuzdHJDLgIo3bz9FnNEqNgwzMROJDnnDHjfTSwi8XvimNwKfYmhBiTmiZcNta6luGpkB6vzLsMTlLcxqE2kJ4s1Yc7YJLFC659LKSkmrfZmU/s2048/Logo+Sekolah+Dasar+%2528Logo+SD%2529.png" alt="Logo" style="height: 50px;" class="me-3 bg-white rounded-circle p-1">
+            <!-- Logo SD Tanpa Latar Putih -->
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhQFOXlcj2tOqNuOKDC35tPNB_BcLIc8mnUuzdHJDLgIo3bz9FnNEqNgwzMROJDnnDHjfTSwi8XvimNwKfYmhBiTmiZcNta6luGpkB6vzLsMTlLcxqE2kJ4s1Yc7YJLFC659LKSkmrfZmU/s2048/Logo+Sekolah+Dasar+%2528Logo+SD%2529.png" alt="Logo" style="height: 50px;" class="me-3">
             
             <div class="d-flex flex-column justify-content-center">
                 <h5 class="m-0 fw-bold text-white" style="line-height: 1;"><?= $sekolah['nama_sekolah'] ?></h5>
