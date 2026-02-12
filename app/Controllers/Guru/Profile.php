@@ -45,7 +45,7 @@ class Profile extends BaseController
         }
 
         $fileFoto = $this->request->getFile('foto');
-        if ($fileFoto->isValid() && !$fileFoto->hasMoved()) {
+        if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
             $newName = $fileFoto->getRandomName();
             $fileFoto->move('uploads/profil', $newName);
 

@@ -45,9 +45,9 @@
         <?php endif; ?>
         
         <div class="header-text">
-            <h2><?= $sekolah['nama_sekolah'] ?></h2>
-            <p><?= $sekolah['alamat'] ?></p>
-            <p><?= $sekolah['kota'] ?> - <?= $sekolah['kode_pos'] ?></p>
+            <h2><?= $sekolah['nama_instansi'] ?? 'Instansi' ?></h2>
+            <p><?= $sekolah['alamat'] ?? '' ?></p>
+            <p><?= $sekolah['kota'] ?? '' ?> - <?= $sekolah['kode_pos'] ?? '' ?></p>
         </div>
     </div>
 
@@ -55,8 +55,8 @@
         <tr>
             <td class="label">Mata Pelajaran</td>
             <td width="35%">: <?= $jadwal['nama_mapel'] ?></td>
-            <td class="label">Kelas</td>
-            <td>: <?= $jadwal['nama_kelas'] ?></td>
+            <td class="label">Sekolah</td>
+            <td>: <?= $jadwal['nama_sekolah'] ?></td>
         </tr>
         <tr>
             <td class="label">Guru Pengampu</td>
@@ -110,10 +110,9 @@
 
     <div class="footer">
         <div class="signature-box">
-            <p><?= $sekolah['kota'] ?>, <?= date('d F Y') ?></p>
+            <p><?= $sekolah['kota'] ?? 'Kota' ?>, <?= date('d F Y') ?></p>
             <p>Guru Mata Pelajaran,</p>
             <p class="signature-name"><?= $guru['nama_lengkap'] ?></p>
-            <p>NIP. <?= $guru['nip'] ?></p>
         </div>
     </div>
 

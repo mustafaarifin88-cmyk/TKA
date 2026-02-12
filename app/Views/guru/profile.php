@@ -23,7 +23,7 @@
                         </div>
 
                         <h3 class="mt-3"><?= $active_user['nama_lengkap'] ?></h3>
-                        <p class="text-small">Guru</p>
+                        <p class="text-small">Pembuat Soal</p>
                     </div>
                 </div>
             </div>
@@ -51,10 +51,6 @@
 
                     <form action="<?= base_url('guru/profile/update') ?>" method="post" enctype="multipart/form-data">
                         <?= csrf_field() ?>
-                        <div class="form-group mb-3">
-                            <label for="nip" class="form-label">NIP</label>
-                            <input type="text" name="nip" id="nip" class="form-control" value="<?= $active_user['nip'] ?>" disabled>
-                        </div>
                         <div class="form-group mb-3">
                             <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
                             <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control" value="<?= old('nama_lengkap', $active_user['nama_lengkap']) ?>">

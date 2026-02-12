@@ -7,13 +7,13 @@
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Kelola Bank Soal</h3>
                 <p class="text-subtitle text-muted">
-                    Kelas: <strong><?= $kelas['nama_kelas'] ?></strong> | 
+                    Sekolah: <strong><?= $kelas['nama_sekolah'] ?></strong> | 
                     Mapel: <strong><?= $mapel['nama_mapel'] ?></strong>
                 </p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first text-end">
                 <button type="button" class="btn btn-warning shadow-sm" data-bs-toggle="modal" data-bs-target="#modalSalin">
-                    <i class="bi bi-copy me-2"></i> Salin Soal ke Kelas Lain
+                    <i class="bi bi-copy me-2"></i> Salin Soal
                 </button>
             </div>
         </div>
@@ -135,7 +135,7 @@
         
         <div class="col-12 mt-4">
             <a href="<?= base_url('guru/soal/mapel/' . $kelas['id']) ?>" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Kembali ke Pilih Mapel
+                <i class="bi bi-arrow-left"></i> Kembali
             </a>
         </div>
     </section>
@@ -145,7 +145,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-warning">
-                <h5 class="modal-title"><i class="bi bi-copy me-2"></i> Salin Soal ke Kelas Lain</h5>
+                <h5 class="modal-title"><i class="bi bi-copy me-2"></i> Salin Soal</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?= base_url('guru/soal/salin') ?>" method="post">
@@ -155,14 +155,14 @@
 
                 <div class="modal-body">
                     <p>
-                        Anda akan menyalin semua soal (PG, PG Kompleks, Benar Salah, Esai) dari: <br>
-                        <strong><?= $kelas['nama_kelas'] ?> - <?= $mapel['nama_mapel'] ?></strong>
+                        Salin semua soal dari: <br>
+                        <strong><?= $kelas['nama_sekolah'] ?> - <?= $mapel['nama_mapel'] ?></strong>
                     </p>
                     
                     <div class="form-group mt-3">
-                        <label class="form-label fw-bold">Pilih Kelas & Mapel Tujuan:</label>
+                        <label class="form-label fw-bold">Pilih Tujuan:</label>
                         <select name="target_kombinasi" class="form-select" required>
-                            <option value="">-- Pilih Tujuan Salin --</option>
+                            <option value="">-- Pilih --</option>
                             <?php if (!empty($target_salin)): ?>
                                 <?php foreach ($target_salin as $t): ?>
                                     <option value="<?= $t['kelas_id'] . '-' . $t['mapel_id'] ?>">
@@ -170,17 +170,14 @@
                                     </option>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <option value="" disabled>Tidak ada kelas lain yang tersedia.</option>
+                                <option value="" disabled>Tidak ada tujuan tersedia.</option>
                             <?php endif; ?>
                         </select>
-                        <small class="text-muted d-block mt-2">
-                            <i class="bi bi-info-circle"></i> Soal akan ditambahkan ke bank soal tujuan (tidak menimpa soal lama).
-                        </small>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-warning shadow">Mulai Salin</button>
+                    <button type="submit" class="btn btn-warning shadow">Salin</button>
                 </div>
             </form>
         </div>

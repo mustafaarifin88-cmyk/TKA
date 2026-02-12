@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Bank Soal</h3>
-                <p class="text-subtitle text-muted">Pilih kelas untuk mulai mengelola soal ujian.</p>
+                <p class="text-subtitle text-muted">Pilih sekolah untuk mulai mengelola soal ujian.</p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -26,7 +26,7 @@
             <div class="col-12">
                 <div class="alert alert-warning">
                     <h4 class="alert-heading">Data Kosong</h4>
-                    <p>Anda belum ditugaskan di kelas manapun. Silakan hubungi Administrator.</p>
+                    <p>Anda belum ditugaskan di sekolah manapun.</p>
                 </div>
             </div>
         <?php else : ?>
@@ -37,10 +37,10 @@
                             <div class="card-body">
                                 <div class="mb-3">
                                     <div class="stats-icon blue mx-auto">
-                                        <i class="bi bi-door-open-fill text-white"></i>
+                                        <i class="bi bi-building-fill text-white"></i>
                                     </div>
                                 </div>
-                                <h5 class="card-title text-dark"><?= $k['nama_kelas'] ?></h5>
+                                <h5 class="card-title text-dark"><?= $k['nama_sekolah'] ?></h5>
                                 <p class="card-text text-muted small">Klik untuk memilih Mata Pelajaran</p>
                             </div>
                         </div>

@@ -6,7 +6,15 @@
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Rekap Nilai Ujian</h3>
-                <p class="text-subtitle text-muted">Pilih ujian untuk melakukan koreksi nilai.</p>
+                <p class="text-subtitle text-muted">Pilih ujian untuk melihat hasil dan melakukan koreksi esai.</p>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="<?= base_url('guru/dashboard') ?>">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Nilai</li>
+                    </ol>
+                </nav>
             </div>
         </div>
     </div>
@@ -14,29 +22,35 @@
 
 <div class="page-content">
     <section class="section">
-        <div class="card">
+        <div class="card shadow-sm border-0">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped" id="table1">
-                        <thead>
+                    <table class="table table-hover align-middle" id="table1">
+                        <thead class="bg-light">
                             <tr>
-                                <th>No</th>
+                                <th class="text-center" width="5%">No</th>
                                 <th>Mata Pelajaran</th>
-                                <th>Kelas</th>
+                                <th>Sekolah / Unit</th>
                                 <th>Tanggal Ujian</th>
-                                <th>Aksi</th>
+                                <th class="text-center" width="15%">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($jadwal as $key => $j) : ?>
                                 <tr>
-                                    <td><?= $key + 1 ?></td>
-                                    <td><?= $j['nama_mapel'] ?></td>
-                                    <td><?= $j['nama_kelas'] ?></td>
-                                    <td><?= date('d M Y', strtotime($j['tanggal_ujian'])) ?></td>
+                                    <td class="text-center"><?= $key + 1 ?></td>
                                     <td>
-                                        <a href="<?= base_url('guru/nilai/detail/' . $j['id']) ?>" class="btn btn-primary btn-sm">
-                                            <i class="bi bi-eye-fill"></i> Detail & Koreksi
+                                        <span class="fw-bold text-dark"><?= $j['nama_mapel'] ?></span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light-primary text-primary">
+                                            <i class="bi bi-building me-1"></i> <?= $j['nama_sekolah'] ?>
+                                        </span>
+                                    </td>
+                                    <td><?= date('d M Y', strtotime($j['tanggal_ujian'])) ?></td>
+                                    <td class="text-center">
+                                        <a href="<?= base_url('guru/nilai/detail/' . $j['id']) ?>" class="btn btn-primary btn-sm shadow-sm rounded-pill px-3">
+                                            <i class="bi bi-pencil-square me-1"></i> Detail & Koreksi
                                         </a>
                                     </td>
                                 </tr>

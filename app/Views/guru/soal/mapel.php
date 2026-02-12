@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Pilih Mata Pelajaran</h3>
-                <p class="text-subtitle text-muted">Kelas: <strong><?= $kelas['nama_kelas'] ?></strong></p>
+                <p class="text-subtitle text-muted">Sekolah: <strong><?= $kelas['nama_sekolah'] ?></strong></p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -27,7 +27,7 @@
             <div class="col-12">
                 <div class="alert alert-warning">
                     <h4 class="alert-heading">Data Kosong</h4>
-                    <p>Tidak ada mata pelajaran yang ditugaskan kepada Anda di kelas ini.</p>
+                    <p>Tidak ada mata pelajaran yang ditugaskan kepada Anda di sekolah ini.</p>
                 </div>
             </div>
         <?php else : ?>
@@ -42,7 +42,7 @@
                                     </div>
                                 </div>
                                 <h5 class="card-title text-dark"><?= $m['nama_mapel'] ?></h5>
-                                <p class="card-text text-muted small">Kelola Soal PG & Esai</p>
+                                <p class="card-text text-muted small">Kelola Bank Soal</p>
                             </div>
                         </div>
                     </a>
@@ -52,7 +52,7 @@
         
         <div class="col-12 mt-3">
             <a href="<?= base_url('guru/soal') ?>" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Kembali ke Pilih Kelas
+                <i class="bi bi-arrow-left"></i> Kembali
             </a>
         </div>
     </section>

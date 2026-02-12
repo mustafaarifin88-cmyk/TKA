@@ -7,19 +7,17 @@
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Detail Penilaian</h3>
                 <p class="text-subtitle text-muted">
-                    <span class="badge bg-primary"><?= $jadwal['nama_mapel'] ?></span> 
-                    <span class="badge bg-info"><?= $jadwal['nama_kelas'] ?></span>
+                    <span class="badge bg-primary me-1"><?= $jadwal['nama_mapel'] ?></span> 
+                    <span class="badge bg-info"><?= $jadwal['nama_sekolah'] ?></span>
                 </p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first text-end">
                 <a href="<?= base_url('guru/nilai/cetak/' . $jadwal['id']) ?>" target="_blank" class="btn btn-danger shadow-sm me-1">
                     <i class="bi bi-printer-fill me-2"></i> PDF
                 </a>
-                
                 <a href="<?= base_url('guru/nilai/export_excel/' . $jadwal['id']) ?>" target="_blank" class="btn btn-success shadow-sm me-1">
                     <i class="bi bi-file-earmark-excel-fill me-2"></i> Excel
                 </a>
-
                 <a href="<?= base_url('guru/nilai') ?>" class="btn btn-secondary shadow-sm">Kembali</a>
             </div>
         </div>
@@ -81,7 +79,7 @@
                 </div>
             </form>
             <div class="alert alert-light-secondary mt-3 mb-0 py-2">
-                <small><i class="bi bi-info-circle me-1"></i> Total bobot harus 100%. Nilai Akhir dihitung otomatis berdasarkan persentase masing-masing jenis soal.</small>
+                <small><i class="bi bi-info-circle me-1"></i> Total bobot harus 100%. Nilai Akhir dihitung otomatis berdasarkan persentase.</small>
             </div>
         </div>
     </div>
@@ -98,7 +96,7 @@
                             <th class="text-center">No</th>
                             <th>Nama Siswa</th>
                             <th class="text-center">PG</th>
-                            <th class="text-center">Kompleks</th>
+                            <th class="text-center">Komp</th>
                             <th class="text-center">B/S</th>
                             <th class="text-center">Esai</th>
                             <th class="text-center bg-light-success text-success">Akhir</th>

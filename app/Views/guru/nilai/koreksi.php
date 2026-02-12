@@ -74,7 +74,7 @@
                         <div class="card border mb-3">
                             <div class="card-body">
                                 <h6 class="card-title text-muted">Soal No. <?= $key + 1 ?></h6>
-                                <p class="mb-3 fw-bold"><?= $e['pertanyaan'] ?></p>
+                                <div class="mb-3 text-dark"><?= $e['pertanyaan'] ?></div>
                                 
                                 <div class="mb-3">
                                     <label class="form-label text-muted small">Jawaban Siswa:</label>
@@ -116,7 +116,7 @@
                     <h6 class="text-primary mt-2">Pilihan Ganda</h6>
                     <?php foreach($pg['data'] as $p): ?>
                         <div class="mb-2 p-2 border rounded bg-white d-flex justify-content-between">
-                            <small class="text-truncate w-75"><?= strip_tags($p['pertanyaan']) ?></small>
+                            <div class="w-75 text-truncate"><?= strip_tags($p['pertanyaan']) ?></div>
                             <span>
                                 Jwb: <b><?= $p['jawaban_siswa'] ?></b> 
                                 <span class="badge <?= ($p['jawaban_siswa']==$p['kunci_jawaban']) ? 'bg-success' : 'bg-danger' ?>">
@@ -135,7 +135,7 @@
                         $isBenar = ($kunciArr === $jawabArr);
                     ?>
                         <div class="mb-2 p-2 border rounded bg-white d-flex justify-content-between">
-                            <small class="text-truncate w-75"><?= strip_tags($k['pertanyaan']) ?></small>
+                            <div class="w-75 text-truncate"><?= strip_tags($k['pertanyaan']) ?></div>
                             <span>
                                 <span class="badge <?= $isBenar ? 'bg-success' : 'bg-danger' ?>">
                                     <?= $isBenar ? 'Benar' : 'Salah' ?>
@@ -145,13 +145,16 @@
                     <?php endforeach; ?>
 
                     <h6 class="text-success mt-3">Benar / Salah</h6>
-                    <?php foreach($bs['data'] as $b): ?>
+                    <?php foreach($bs['data'] as $b): 
+                         $kunciArr = json_decode($b['kunci_jawaban'], true);
+                         $jawabArr = json_decode($b['jawaban_siswa'], true);
+                         $isBenar = (is_array($kunciArr) && is_array($jawabArr) && $kunciArr === $jawabArr);
+                    ?>
                         <div class="mb-2 p-2 border rounded bg-white d-flex justify-content-between">
-                            <small class="text-truncate w-75"><?= strip_tags($b['pertanyaan']) ?></small>
+                            <div class="w-75 text-truncate"><?= strip_tags($b['pertanyaan']) ?></div>
                             <span>
-                                Jwb: <b><?= $b['jawaban_siswa'] ?></b>
-                                <span class="badge <?= ($b['jawaban_siswa']==$b['kunci_jawaban']) ? 'bg-success' : 'bg-danger' ?>">
-                                    <?= ($b['jawaban_siswa']==$b['kunci_jawaban']) ? 'Benar' : 'Salah' ?>
+                                <span class="badge <?= $isBenar ? 'bg-success' : 'bg-danger' ?>">
+                                    <?= $isBenar ? 'Benar' : 'Salah' ?>
                                 </span>
                             </span>
                         </div>
@@ -160,6 +163,5 @@
             </div>
         </div>
     </div>
-
 </div>
 <?= $this->endSection(); ?>
