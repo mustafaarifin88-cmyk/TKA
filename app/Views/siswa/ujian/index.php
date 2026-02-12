@@ -6,11 +6,9 @@
     <div class="container-fluid px-4">
         <!-- Logo & Identitas Sekolah -->
         <a class="navbar-brand d-flex align-items-center" href="#">
-            <?php if (!empty($jadwal['logo']) && file_exists('uploads/sekolah/' . $jadwal['logo'])) : ?>
-                <img src="<?= base_url('uploads/sekolah/' . $jadwal['logo']) ?>" alt="Logo" style="height: 50px;" class="me-3 bg-white rounded-circle p-1">
-            <?php else: ?>
-                <img src="<?= base_url('assets/static/images/logo/logo.png') ?>" alt="Logo" style="height: 50px;" class="me-3 bg-white rounded-circle p-1">
-            <?php endif; ?>
+            <!-- Logo SD dari Link Eksternal -->
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhQFOXlcj2tOqNuOKDC35tPNB_BcLIc8mnUuzdHJDLgIo3bz9FnNEqNgwzMROJDnnDHjfTSwi8XvimNwKfYmhBiTmiZcNta6luGpkB6vzLsMTlLcxqE2kJ4s1Yc7YJLFC659LKSkmrfZmU/s2048/Logo+Sekolah+Dasar+%2528Logo+SD%2529.png" alt="Logo" style="height: 50px;" class="me-3 bg-white rounded-circle p-1">
+            
             <div class="d-flex flex-column">
                 <span class="fw-bold text-white" style="line-height: 1.1; font-size: 1.1rem;"><?= $jadwal['nama_sekolah'] ?></span>
                 <span class="text-white-50 small" style="font-size: 0.8rem;"><?= $jadwal['nama_mapel'] ?></span>
