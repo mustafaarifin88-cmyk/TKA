@@ -10,5 +10,14 @@ class SiswaModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $allowedFields    = ['nisn', 'nama_lengkap', 'username', 'password', 'sekolah_id', 'foto'];
+    protected $allowedFields    = [
+        'nisn', 
+        'nama_lengkap', 
+        'tanggal_lahir', 
+        'jenis_kelamin', 
+        'username', 
+        'password', 
+        'sekolah_id', 
+        'foto'
+    ];
 }
