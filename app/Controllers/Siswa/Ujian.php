@@ -3,255 +3,277 @@
 namespace App\Controllers\Siswa;
 
 use App\Controllers\BaseController;
+use App\Models\JadwalUjianModel;
+use App\Models\SoalModel;
+use App\Models\JawabanSiswaModel;
+use App\Models\StatusUjianSiswaModel;
 
 class Ujian extends BaseController
 {
+    protected $jadwalModel;
+    protected $soalModel;
+    protected $jawabanModel;
+    protected $statusUjianModel;
     protected $db;
 
     public function __construct()
     {
+        $this->jadwalModel = new JadwalUjianModel();
+        $this->soalModel = new SoalModel();
+        $this->jawabanModel = new JawabanSiswaModel();
+        $this->statusUjianModel = new StatusUjianSiswaModel();
         $this->db = \Config\Database::connect();
     }
 
     public function index()
     {
+        $jadwalId = session()->get('jadwal_id_aktif');
         $siswaId = session()->get('id');
-        $siswa = $this->db->table('siswa')->where('id', $siswaId)->get()->getRow();
 
-        $builder = $this->db->table('jadwal_ujian');
-        $builder->select('jadwal_ujian.*, mapel.nama_mapel, guru.nama_lengkap as nama_guru');
-        $builder->join('mapel', 'mapel.id = jadwal_ujian.mapel_id');
-        $builder->join('guru', 'guru.id = jadwal_ujian.guru_id', 'left');
-        $builder->where('jadwal_ujian.sekolah_id', $siswa->sekolah_id);
-        $builder->where('jadwal_ujian.tanggal_ujian', date('Y-m-d'));
-        $ujian = $builder->get()->getResultArray();
-
-        foreach ($ujian as &$u) {
-            $cekStatus = $this->db->table('status_ujian_siswa')
-                ->where('jadwal_id', $u['id'])
-                ->where('siswa_id', $siswaId)
-                ->get()->getRow();
-            
-            $u['status_siswa'] = $cekStatus ? $cekStatus->status : 'belum_mulai';
+        if (!$jadwalId) {
+            return redirect()->to('siswa/dashboard');
         }
 
-        $data = [
-            'title' => 'Daftar Ujian',
-            'ujian' => $ujian
-        ];
+        $jadwal = $this->jadwalModel
+            ->select('jadwal_ujian.*, mapel.nama_mapel, sekolah.nama_sekolah')
+            ->join('mapel', 'mapel.id = jadwal_ujian.mapel_id')
+            ->join('sekolah', 'sekolah.id = jadwal_ujian.sekolah_id')
+            ->find($jadwalId);
 
-        return view('siswa/ujian/daftar_ujian', $data);
-    }
-
-    public function token($jadwalId)
-    {
-        $jadwal = $this->db->table('jadwal_ujian')->where('id', $jadwalId)->get()->getRow();
-        
-        $waktuSekarang = date('Y-m-d H:i:s');
-        $waktuMulai = $jadwal->tanggal_ujian . ' ' . $jadwal->jam_mulai;
-        
-        if ($waktuSekarang < $waktuMulai) {
-            return redirect()->back()->with('error', 'Ujian belum dimulai. Dimulai pada: ' . $waktuMulai);
+        if (!$jadwal) {
+            return redirect()->to('siswa/dashboard');
         }
 
-        $siswaId = session()->get('id');
-        $cekSelesai = $this->db->table('status_ujian_siswa')
+        $status = $this->statusUjianModel
             ->where('jadwal_id', $jadwalId)
             ->where('siswa_id', $siswaId)
-            ->where('status', 'selesai')
-            ->countAllResults();
+            ->first();
 
-        if ($cekSelesai > 0) {
-            return redirect()->back()->with('error', 'Anda sudah mengerjakan ujian ini.');
+        if ($status && $status['status'] == 'selesai') {
+            return redirect()->to('siswa/ujian/result');
         }
 
-        $cekMulai = $this->db->table('status_ujian_siswa')
-            ->where('jadwal_id', $jadwalId)
-            ->where('siswa_id', $siswaId)
-            ->countAllResults();
-        
-        if ($cekMulai == 0) {
-            $this->db->table('status_ujian_siswa')->insert([
+        if (!$status) {
+            $this->statusUjianModel->save([
                 'jadwal_id' => $jadwalId,
                 'siswa_id' => $siswaId,
                 'waktu_mulai' => date('Y-m-d H:i:s'),
-                'status' => 'sedang_mengerjakan'
+                'status' => 'berjalan'
             ]);
         }
 
-        return redirect()->to(base_url('siswa/ujian/kerjakan/' . $jadwalId));
-    }
-
-    public function kerjakan($jadwalId)
-    {
-        $siswaId = session()->get('id');
-        
-        $jadwal = $this->db->table('jadwal_ujian')
-            ->select('jadwal_ujian.*, mapel.nama_mapel')
-            ->join('mapel', 'mapel.id = jadwal_ujian.mapel_id')
-            ->where('jadwal_ujian.id', $jadwalId)
-            ->get()->getRow();
-
-        $statusSiswa = $this->db->table('status_ujian_siswa')
-            ->where('jadwal_id', $jadwalId)
-            ->where('siswa_id', $siswaId)
-            ->get()->getRow();
-
-        if (!$statusSiswa || $statusSiswa->status == 'selesai') {
-            return redirect()->to(base_url('siswa/ujian'))->with('error', 'Sesi ujian tidak valid atau sudah selesai.');
-        }
-
-        $waktuSelesai = date('Y-m-d H:i:s', strtotime($statusSiswa->waktu_mulai . ' + ' . $jadwal->lama_ujian . ' minutes'));
-        
-        $soalObjektif = $this->db->table('soal')
-            ->where('mapel_id', $jadwal->mapel_id)
-            ->where('sekolah_id', $jadwal->sekolah_id)
-            ->whereIn('jenis', ['pg', 'pg_kompleks', 'benar_salah'])
-            ->orderBy('RAND()')
-            ->get()->getResultArray();
-
-        $soalEsai = $this->db->table('soal')
-            ->where('mapel_id', $jadwal->mapel_id)
-            ->where('sekolah_id', $jadwal->sekolah_id)
-            ->where('jenis', 'esai')
+        $soal = $this->soalModel
+            ->where('guru_id', $jadwal['guru_id'])
+            ->where('mapel_id', $jadwal['mapel_id'])
             ->orderBy('id', 'ASC')
-            ->get()->getResultArray();
+            ->findAll();
 
-        $semuaSoal = array_merge($soalObjektif, $soalEsai);
-
-        $jawabanTersimpan = $this->db->table('hasil_ujian')
+        $jawabanSiswa = $this->jawabanModel
             ->where('jadwal_id', $jadwalId)
             ->where('siswa_id', $siswaId)
-            ->get()->getResultArray();
-        
-        $jawabanMap = [];
-        foreach($jawabanTersimpan as $j) {
-            $jawabanMap[$j['soal_id']] = $j['jawaban_siswa'];
+            ->findAll();
+
+        $jawabanArr = [];
+        foreach ($jawabanSiswa as $j) {
+            $jawabanArr[$j['soal_id']] = $j['jawaban_siswa'];
         }
 
         $data = [
+            'title' => 'Ujian Berlangsung',
             'jadwal' => $jadwal,
-            'waktu_selesai' => $waktuSelesai,
-            'daftar_soal' => $semuaSoal, 
-            'jawaban_map' => $jawabanMap,
-            'total_soal' => count($semuaSoal)
+            'soal' => $soal,
+            'jawaban' => $jawabanArr,
+            'siswa' => $this->db->table('siswa')->find($siswaId)
         ];
 
-        return view('siswa/ujian/lembar_ujian', $data);
+        return view('siswa/ujian/index', $data);
     }
 
-    public function simpan_jawaban()
+    public function simpanJawaban()
     {
-        if ($this->request->isAJAX()) {
-            $siswaId = session()->get('id');
-            $jadwalId = $this->request->getPost('jadwal_id');
-            $soalId = $this->request->getPost('soal_id');
-            $jawaban = $this->request->getPost('jawaban');
-
-            if (is_array($jawaban)) {
-                $jawaban = json_encode($jawaban);
-            }
-
-            $cek = $this->db->table('hasil_ujian')
-                ->where('jadwal_id', $jadwalId)
-                ->where('siswa_id', $siswaId)
-                ->where('soal_id', $soalId)
-                ->countAllResults();
-
-            if ($cek > 0) {
-                $this->db->table('hasil_ujian')
-                    ->where('jadwal_id', $jadwalId)
-                    ->where('siswa_id', $siswaId)
-                    ->where('soal_id', $soalId)
-                    ->update(['jawaban_siswa' => $jawaban, 'waktu_submit' => date('Y-m-d H:i:s')]);
-            } else {
-                $this->db->table('hasil_ujian')->insert([
-                    'jadwal_id' => $jadwalId,
-                    'siswa_id' => $siswaId,
-                    'soal_id' => $soalId,
-                    'jawaban_siswa' => $jawaban,
-                    'waktu_submit' => date('Y-m-d H:i:s')
-                ]);
-            }
-            return json_encode(['status' => 'success']);
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(404);
         }
+
+        $siswaId = session()->get('id');
+        $jadwalId = session()->get('jadwal_id_aktif');
+        $soalId = $this->request->getPost('soal_id');
+        $jawaban = $this->request->getPost('jawaban');
+
+        if (is_array($jawaban)) {
+            $jawaban = json_encode($jawaban);
+        }
+
+        $exist = $this->jawabanModel
+            ->where('jadwal_id', $jadwalId)
+            ->where('siswa_id', $siswaId)
+            ->where('soal_id', $soalId)
+            ->first();
+
+        if ($exist) {
+            $this->jawabanModel->update($exist['id'], [
+                'jawaban_siswa' => $jawaban,
+                'waktu_submit' => date('Y-m-d H:i:s')
+            ]);
+        } else {
+            $this->jawabanModel->save([
+                'jadwal_id' => $jadwalId,
+                'siswa_id' => $siswaId,
+                'soal_id' => $soalId,
+                'jawaban_siswa' => $jawaban,
+                'waktu_submit' => date('Y-m-d H:i:s')
+            ]);
+        }
+
+        return $this->response->setJSON(['status' => 'success']);
     }
 
-    public function selesai_ujian()
+    public function selesai()
     {
         $siswaId = session()->get('id');
-        $jadwalId = $this->request->getPost('jadwal_id');
+        $jadwalId = session()->get('jadwal_id_aktif');
 
-        $this->hitungNilaiOtomatis($jadwalId, $siswaId);
+        if (!$jadwalId) {
+            return redirect()->to('siswa/dashboard');
+        }
 
-        $this->db->table('status_ujian_siswa')
+        $jadwal = $this->jadwalModel->find($jadwalId);
+        
+        $soalList = $this->soalModel
+            ->where('guru_id', $jadwal['guru_id'])
+            ->where('mapel_id', $jadwal['mapel_id'])
+            ->findAll();
+
+        $jawabanList = $this->jawabanModel
             ->where('jadwal_id', $jadwalId)
             ->where('siswa_id', $siswaId)
-            ->update(['status' => 'selesai']);
+            ->findAll();
+        
+        $mapJawaban = [];
+        foreach ($jawabanList as $j) {
+            $mapJawaban[$j['soal_id']] = $j['jawaban_siswa'];
+        }
 
-        return redirect()->to(base_url('siswa/dashboard'))->with('success', 'Ujian berhasil dikumpulkan.');
-    }
+        $nilaiPg = 0; $benarPg = 0; $totalPg = 0;
+        $nilaiPgK = 0; $benarPgK = 0; $totalPgK = 0;
+        $nilaiBS = 0; $benarBS = 0; $totalBS = 0;
+        $totalEsai = 0;
 
-    private function hitungNilaiOtomatis($jadwalId, $siswaId)
-    {
-        $jawabanSiswa = $this->db->table('hasil_ujian')
-            ->select('hasil_ujian.jawaban_siswa, soal.jenis, soal.kunci_jawaban')
-            ->join('soal', 'soal.id = hasil_ujian.soal_id')
-            ->where('hasil_ujian.jadwal_id', $jadwalId)
-            ->where('hasil_ujian.siswa_id', $siswaId)
-            ->get()->getResultArray();
+        foreach ($soalList as $soal) {
+            $jawab = $mapJawaban[$soal['id']] ?? null;
+            $kunci = $soal['kunci_jawaban'];
 
-        $score = ['pg' => 0, 'pg_kompleks' => 0, 'benar_salah' => 0];
-        $total = ['pg' => 0, 'pg_kompleks' => 0, 'benar_salah' => 0];
-
-        foreach($jawabanSiswa as $j) {
-            $jenis = $j['jenis'];
-            if ($jenis == 'esai') continue;
-
-            $total[$jenis]++;
-            $kunci = $j['kunci_jawaban'];
-            $jawab = $j['jawaban_siswa'];
-
-            if ($jenis == 'pg') {
-                if (trim($jawab) == trim($kunci)) {
-                    $score['pg']++;
+            if ($soal['jenis'] == 'pg') {
+                $totalPg++;
+                if ($jawab && $jawab == $kunci) {
+                    $benarPg++;
                 }
-            } 
-            elseif ($jenis == 'pg_kompleks') {
-                $kunciArr = json_decode($kunci, true);
-                $jawabArr = json_decode($jawab, true);
-
-                if (is_array($kunciArr) && is_array($jawabArr)) {
-                    sort($kunciArr);
-                    sort($jawabArr);
-                    if ($kunciArr === $jawabArr) {
-                        $score['pg_kompleks']++;
-                    }
+            } elseif ($soal['jenis'] == 'pg_kompleks') {
+                $totalPgK++;
+                $kunciArr = json_decode($kunci, true) ?? [];
+                $jawabArr = json_decode($jawab, true) ?? [];
+                
+                sort($kunciArr);
+                sort($jawabArr);
+                
+                if (!empty($kunciArr) && $kunciArr === $jawabArr) {
+                    $benarPgK++;
                 }
-            }
-            elseif ($jenis == 'benar_salah') {
-                $kunciArr = json_decode($kunci, true);
-                $jawabArr = json_decode($jawab, true);
-
-                if (is_array($kunciArr) && is_array($jawabArr) && count($kunciArr) == count($jawabArr)) {
-                    if ($kunciArr === $jawabArr) {
-                        $score['benar_salah']++;
-                    }
+            } elseif ($soal['jenis'] == 'benar_salah') {
+                $totalBS++;
+                $kunciArr = json_decode($kunci, true) ?? [];
+                $jawabArr = json_decode($jawab, true) ?? [];
+                
+                if (!empty($kunciArr) && $kunciArr === $jawabArr) {
+                    $benarBS++;
                 }
+            } elseif ($soal['jenis'] == 'esai') {
+                $totalEsai++;
             }
         }
 
-        $nilaiPg = ($total['pg'] > 0) ? ($score['pg'] / $total['pg']) * 100 : 0;
-        $nilaiPgKompleks = ($total['pg_kompleks'] > 0) ? ($score['pg_kompleks'] / $total['pg_kompleks']) * 100 : 0;
-        $nilaiBenarSalah = ($total['benar_salah'] > 0) ? ($score['benar_salah'] / $total['benar_salah']) * 100 : 0;
+        $skorPg = ($totalPg > 0) ? ($benarPg / $totalPg) * $jadwal['bobot_pg'] : 0;
+        $skorPgK = ($totalPgK > 0) ? ($benarPgK / $totalPgK) * $jadwal['bobot_pg_kompleks'] : 0;
+        $skorBS = ($totalBS > 0) ? ($benarBS / $totalBS) * $jadwal['bobot_benar_salah'] : 0;
+        
+        $skorTotal = $skorPg + $skorPgK + $skorBS;
 
-        $this->db->table('status_ujian_siswa')
+        $statusExisting = $this->statusUjianModel
             ->where('jadwal_id', $jadwalId)
             ->where('siswa_id', $siswaId)
-            ->update([
-                'nilai_pg' => $nilaiPg,
-                'nilai_pg_kompleks' => $nilaiPgKompleks,
-                'nilai_benar_salah' => $nilaiBenarSalah
-            ]);
+            ->first();
+
+        $dataUpdate = [
+            'status' => 'selesai',
+            'nilai_pg' => $skorPg,
+            'nilai_pg_kompleks' => $skorPgK,
+            'nilai_benar_salah' => $skorBS,
+            'nilai_esai' => 0,
+            'nilai_total' => $skorTotal
+        ];
+
+        if ($statusExisting) {
+            $this->statusUjianModel->update($statusExisting['id'], $dataUpdate);
+        } else {
+            $dataUpdate['jadwal_id'] = $jadwalId;
+            $dataUpdate['siswa_id'] = $siswaId;
+            $dataUpdate['waktu_mulai'] = date('Y-m-d H:i:s');
+            $this->statusUjianModel->save($dataUpdate);
+        }
+
+        return redirect()->to('siswa/ujian/result');
+    }
+
+    public function result()
+    {
+        $siswaId = session()->get('id');
+        $jadwalId = session()->get('jadwal_id_aktif');
+
+        if (!$jadwalId) {
+             return redirect()->to('siswa/dashboard');
+        }
+
+        $status = $this->statusUjianModel
+            ->where('jadwal_id', $jadwalId)
+            ->where('siswa_id', $siswaId)
+            ->first();
+        
+        if (!$status || $status['status'] != 'selesai') {
+            return redirect()->to('siswa/dashboard');
+        }
+
+        $jadwal = $this->jadwalModel
+             ->select('jadwal_ujian.*, mapel.nama_mapel, sekolah.nama_sekolah')
+             ->join('mapel', 'mapel.id = jadwal_ujian.mapel_id')
+             ->join('sekolah', 'sekolah.id = jadwal_ujian.sekolah_id')
+             ->find($jadwalId);
+
+        $soalList = $this->soalModel
+            ->where('guru_id', $jadwal['guru_id'])
+            ->where('mapel_id', $jadwal['mapel_id'])
+            ->findAll();
+
+        $jawabanList = $this->jawabanModel
+            ->where('jadwal_id', $jadwalId)
+            ->where('siswa_id', $siswaId)
+            ->findAll();
+
+        $mapJawaban = [];
+        foreach ($jawabanList as $j) {
+            $mapJawaban[$j['soal_id']] = $j['jawaban_siswa'];
+        }
+
+        $data = [
+            'title' => 'Hasil Ujian',
+            'status' => $status,
+            'jadwal' => $jadwal,
+            'soal' => $soalList,
+            'jawaban' => $mapJawaban,
+            'siswa' => $this->db->table('siswa')->find($siswaId)
+        ];
+
+        session()->remove('jadwal_id_aktif');
+
+        return view('siswa/ujian/result', $data);
     }
 }
