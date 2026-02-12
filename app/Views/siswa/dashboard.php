@@ -1,80 +1,103 @@
 <?= $this->extend('layouts/ujian'); ?>
 
 <?= $this->section('content'); ?>
+<!-- Header Login Style -->
+<nav class="navbar navbar-light bg-white shadow-sm mb-4" style="height: 80px;">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <?php if (!empty($sekolah['logo']) && file_exists('uploads/sekolah/' . $sekolah['logo'])) : ?>
+                <img src="<?= base_url('uploads/sekolah/' . $sekolah['logo']) ?>" alt="Logo" style="height: 50px;" class="me-3">
+            <?php else: ?>
+                <img src="<?= base_url('assets/static/images/logo/logo.png') ?>" alt="Logo" style="height: 50px;" class="me-3">
+            <?php endif; ?>
+            <div class="d-flex flex-column justify-content-center">
+                <h5 class="m-0 fw-bold text-primary" style="line-height: 1;"><?= $sekolah['nama_sekolah'] ?></h5>
+                <small class="text-muted" style="font-size: 0.85rem;">Computer Based Test (CBT)</small>
+            </div>
+        </a>
+        <div class="d-none d-md-flex align-items-center gap-3">
+             <div class="text-end">
+                 <span class="d-block fw-bold text-dark"><?= $siswa['nama_lengkap'] ?></span>
+                 <span class="d-block text-muted small"><?= $siswa['username'] ?></span>
+             </div>
+             <div class="vr"></div>
+             <a href="<?= base_url('logout') ?>" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                <i class="bi bi-power me-1"></i> Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
 <div class="container">
-    <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
-        <div class="col-md-6 col-lg-5">
+    <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+        <div class="col-md-8 col-lg-6">
             <div class="card shadow-lg border-0 rounded-4">
-                <div class="card-header bg-primary text-white text-center py-4 rounded-top-4">
-                    <h4 class="mb-0 fw-bold">Konfirmasi Peserta Ujian</h4>
-                    <p class="mb-0 text-white-50">Silakan verifikasi data diri Anda</p>
+                <div class="card-header bg-white text-center py-4 border-bottom-0">
+                    <h4 class="mb-1 fw-bold text-primary">Konfirmasi Ujian</h4>
+                    <p class="text-muted mb-0">Silakan periksa data ujian Anda sebelum memulai.</p>
                 </div>
-                <div class="card-body p-4 p-md-5">
+                <div class="card-body p-4 p-md-5 pt-0">
                     
                     <div id="alert-container"></div>
 
                     <form id="form-konfirmasi">
                         <?= csrf_field() ?>
                         
-                        <div class="form-group mb-3">
-                            <label class="form-label text-muted small text-uppercase fw-bold">Sekolah</label>
-                            <input type="text" class="form-control form-control-lg bg-light" value="<?= $sekolah['nama_sekolah'] ?>" readonly>
+                        <div class="bg-light p-3 rounded-3 mb-4 border border-dashed">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Nama Peserta</span>
+                                <span class="fw-bold text-dark"><?= $siswa['nama_lengkap'] ?></span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">NISN / Username</span>
+                                <span class="fw-bold text-dark"><?= $siswa['nisn'] ?? $siswa['username'] ?></span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Asal Sekolah</span>
+                                <span class="fw-bold text-dark"><?= $sekolah['nama_sekolah'] ?></span>
+                            </div>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label class="form-label text-muted small text-uppercase fw-bold">Nama Peserta</label>
-                            <input type="text" class="form-control form-control-lg bg-light" value="<?= $siswa['nama_lengkap'] ?>" readonly>
+                        <div class="form-floating mb-3">
+                            <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" placeholder="Tanggal Lahir" required>
+                            <label for="tanggal_lahir">Konfirmasi Tanggal Lahir</label>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label class="form-label text-muted small text-uppercase fw-bold">Username</label>
-                            <input type="text" class="form-control form-control-lg bg-light" value="<?= $siswa['username'] ?>" readonly>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="tanggal_lahir" class="form-label fw-bold text-dark">Tanggal Lahir <span class="text-danger">*</span></label>
-                            <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control form-control-lg border-primary" required>
-                            <div class="form-text">Masukkan tanggal lahir untuk verifikasi.</div>
-                        </div>
-
-                        <div class="form-group mb-4">
-                            <label for="mapel_id" class="form-label fw-bold text-dark">Mata Pelajaran <span class="text-danger">*</span></label>
-                            <select name="mapel_id" id="mapel_id" class="form-select form-select-lg border-primary" required>
+                        <div class="form-floating mb-4">
+                            <select name="mapel_id" id="mapel_id" class="form-select" required>
                                 <option value="">-- Pilih Mata Pelajaran --</option>
                                 <?php foreach ($mapel as $m) : ?>
                                     <option value="<?= $m['id'] ?>"><?= $m['nama_mapel'] ?></option>
                                 <?php endforeach; ?>
                             </select>
+                            <label for="mapel_id">Mata Pelajaran yang Diujikan</label>
                         </div>
 
-                        <!-- Area Status Jadwal (Hidden by default) -->
+                        <!-- Status Area -->
                         <div id="status-area" class="d-none text-center mb-4">
-                            <div id="countdown-box" class="alert alert-warning d-none">
-                                <h5 class="alert-heading"><i class="bi bi-clock-history"></i> Ujian Belum Dimulai</h5>
-                                <p class="mb-1">Waktu tersisa menuju ujian:</p>
-                                <h2 id="timer" class="fw-bold mb-0">00:00:00</h2>
+                            <div id="countdown-box" class="alert alert-warning d-none fade show shadow-sm">
+                                <h6 class="alert-heading fw-bold"><i class="bi bi-alarm"></i> Ujian Belum Dimulai</h6>
+                                <p class="mb-1 small">Hitung mundur menuju waktu ujian:</p>
+                                <h2 id="timer" class="fw-bold mb-0 font-monospace text-dark">00:00:00</h2>
                             </div>
                             
-                            <div id="msg-box" class="alert d-none"></div>
+                            <div id="msg-box" class="alert d-none fade show"></div>
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="button" id="btn-cek" class="btn btn-primary btn-lg shadow">
-                                <i class="bi bi-search me-2"></i> Cek Jadwal & Verifikasi
+                            <button type="button" id="btn-cek" class="btn btn-primary btn-lg shadow-sm rounded-pill">
+                                <i class="bi bi-search me-2"></i> Cek Ketersediaan Ujian
                             </button>
-                            <button type="button" id="btn-mulai" class="btn btn-success btn-lg shadow d-none pulse-button">
-                                <i class="bi bi-play-circle-fill me-2"></i> MULAI UJIAN
+                            <button type="button" id="btn-mulai" class="btn btn-success btn-lg shadow rounded-pill pulse-button d-none">
+                                <i class="bi bi-play-fill me-1"></i> MULAI MENGERJAKAN
                             </button>
-                            <a href="<?= base_url('logout') ?>" class="btn btn-light text-danger mt-2">
-                                <i class="bi bi-box-arrow-left me-2"></i> Logout
-                            </a>
                         </div>
 
                     </form>
                 </div>
             </div>
-            <div class="text-center mt-3 text-muted small">
-                &copy; <?= date('Y') ?> Aplikasi Ujian Berbasis Komputer
+            <div class="text-center mt-4 text-muted small opacity-50">
+                &copy; <?= date('Y') ?> <?= $sekolah['nama_sekolah'] ?>
             </div>
         </div>
     </div>
@@ -99,13 +122,14 @@
                 Swal.fire({
                     icon: 'warning',
                     title: 'Data Belum Lengkap',
-                    text: 'Mohon isi Tanggal Lahir dan pilih Mata Pelajaran.'
+                    text: 'Mohon isi Tanggal Lahir dan pilih Mata Pelajaran.',
+                    confirmButtonColor: '#435ebe'
                 });
                 return;
             }
 
-            // Reset UI
-            btnCek.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
+            // Loading State
+            btnCek.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memeriksa...');
             statusArea.addClass('d-none');
             msgBox.addClass('d-none').removeClass('alert-danger alert-info alert-success');
             countdownBox.addClass('d-none');
@@ -123,88 +147,57 @@
                     statusArea.removeClass('d-none');
 
                     if (response.status === 'error') {
-                        // Tanggal Lahir Salah
-                        msgBox.removeClass('d-none').addClass('alert-danger').html('<i class="bi bi-x-circle-fill"></i> ' + response.message);
-                        Swal.fire('Gagal', response.message, 'error');
+                        msgBox.removeClass('d-none').addClass('alert-danger').html('<i class="bi bi-exclamation-circle-fill me-2"></i> ' + response.message);
                     } else if (response.status === 'no_schedule') {
-                        // Jadwal Tidak Ada
-                        msgBox.removeClass('d-none').addClass('alert-danger').html('<i class="bi bi-calendar-x-fill"></i> ' + response.message);
+                        msgBox.removeClass('d-none').addClass('alert-danger').html('<i class="bi bi-calendar-x me-2"></i> ' + response.message);
                     } else if (response.status === 'finished') {
-                        // Sudah Ujian
-                        msgBox.removeClass('d-none').addClass('alert-info').html('<i class="bi bi-check-circle-fill"></i> ' + response.message);
+                        msgBox.removeClass('d-none').addClass('alert-info').html('<i class="bi bi-check-circle-fill me-2"></i> ' + response.message);
                     } else if (response.status === 'countdown') {
-                        // Hitung Mundur
                         countdownBox.removeClass('d-none');
                         startCountdown(response.waktu_mulai);
                     } else if (response.status === 'ready') {
-                        // Siap Ujian
-                        msgBox.removeClass('d-none').addClass('alert-success').html('<i class="bi bi-check-lg"></i> Data Terverifikasi. Jadwal Tersedia.');
+                        msgBox.removeClass('d-none').addClass('alert-success').html('<strong>Data Valid!</strong> Ujian tersedia, silakan mulai.');
                         btnMulai.removeClass('d-none');
-                        btnCek.addClass('d-none'); // Sembunyikan tombol cek jika sudah ready
+                        btnCek.addClass('d-none'); 
                         
-                        // Handler tombol mulai
                         btnMulai.off('click').on('click', function() {
                             window.location.href = response.redirect_url;
                         });
                     }
                 },
                 error: function() {
-                    Swal.fire('Error', 'Terjadi kesalahan koneksi server.', 'error');
+                    Swal.fire('Error', 'Gagal terhubung ke server.', 'error');
                 },
                 complete: function() {
-                    btnCek.prop('disabled', false).html('<i class="bi bi-search me-2"></i> Cek Jadwal & Verifikasi');
+                    btnCek.prop('disabled', false).html('<i class="bi bi-search me-2"></i> Cek Ketersediaan Ujian');
                 }
             });
         });
 
         let countdownInterval;
-
         function startCountdown(startTimeStr) {
             clearInterval(countdownInterval);
-            
-            // Konversi string "YYYY-MM-DD HH:mm:ss" ke object Date
-            // Note: Safari mobile kadang butuh format "YYYY/MM/DD"
             const targetDate = new Date(startTimeStr.replace(/-/g, "/")).getTime();
-
             countdownInterval = setInterval(function() {
                 const now = new Date().getTime();
                 const distance = targetDate - now;
-
                 if (distance < 0) {
                     clearInterval(countdownInterval);
                     timerDisplay.text("00:00:00");
-                    Swal.fire({
-                        title: 'Waktu Ujian Tiba!',
-                        text: 'Silakan klik tombol Cek Jadwal lagi untuk masuk.',
-                        icon: 'info'
-                    }).then(() => {
-                        location.reload();
-                    });
+                    Swal.fire({ title: 'Waktu Ujian Tiba!', text: 'Silakan klik tombol Cek Jadwal lagi.', icon: 'info' }).then(() => { location.reload(); });
                     return;
                 }
-
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                timerDisplay.text(
-                    (hours < 10 ? "0" + hours : hours) + ":" + 
-                    (minutes < 10 ? "0" + minutes : minutes) + ":" + 
-                    (seconds < 10 ? "0" + seconds : seconds)
-                );
+                timerDisplay.text((hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds));
             }, 1000);
         }
     });
 </script>
-
 <style>
-    .pulse-button {
-        animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7); }
-        70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
-        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
-    }
+    .pulse-button { animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); } }
+    .border-dashed { border-style: dashed !important; }
 </style>
 <?= $this->endSection(); ?>
