@@ -5,6 +5,9 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\SiswaModel;
 use App\Models\SekolahModel;
+use App\Models\InstansiModel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -14,22 +17,31 @@ class Siswa extends BaseController
 {
     protected $siswaModel;
     protected $sekolahModel;
+    protected $instansiModel;
 
     public function __construct()
     {
         $this->siswaModel = new SiswaModel();
         $this->sekolahModel = new SekolahModel();
+        $this->instansiModel = new InstansiModel();
     }
 
     public function index()
     {
-        $siswa = $this->siswaModel->select('siswa.*, sekolah.nama_sekolah')
-            ->join('sekolah', 'sekolah.id = siswa.sekolah_id')
-            ->findAll();
+        $sekolahId = $this->request->getGet('sekolah_id');
+        
+        $builder = $this->siswaModel->select('siswa.*, sekolah.nama_sekolah')
+            ->join('sekolah', 'sekolah.id = siswa.sekolah_id');
+
+        if ($sekolahId) {
+            $builder->where('siswa.sekolah_id', $sekolahId);
+        }
 
         $data = [
             'title' => 'Data Siswa',
-            'siswa' => $siswa
+            'siswa' => $builder->orderBy('siswa.id', 'DESC')->findAll(),
+            'sekolah' => $this->sekolahModel->findAll(),
+            'selected_sekolah' => $sekolahId
         ];
         return view('admin/siswa/index', $data);
     }
@@ -50,37 +62,50 @@ class Siswa extends BaseController
             'nisn' => 'required|is_unique[siswa.nisn]',
             'nama_lengkap' => 'required',
             'sekolah_id' => 'required',
-            'username' => 'required|is_unique[siswa.username]',
-            'password' => 'required|min_length[6]',
+            'tanggal_lahir' => 'required|valid_date',
+            'jenis_kelamin' => 'required|in_list[L,P]',
             'foto' => 'max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]'
         ])) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $fotoName = 'default.jpg';
         $fileFoto = $this->request->getFile('foto');
+        $namaFoto = 'default.jpg';
         if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
-            $fotoName = $fileFoto->getRandomName();
-            $fileFoto->move('uploads/profil', $fotoName);
+            $namaFoto = $fileFoto->getRandomName();
+            $fileFoto->move('uploads/profil', $namaFoto);
         }
 
-        $this->siswaModel->save([
+        $data = [
             'nisn' => $this->request->getPost('nisn'),
             'nama_lengkap' => $this->request->getPost('nama_lengkap'),
             'sekolah_id' => $this->request->getPost('sekolah_id'),
-            'username' => $this->request->getPost('username'),
-            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'foto' => $fotoName
-        ]);
+            'tanggal_lahir' => $this->request->getPost('tanggal_lahir'),
+            'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
+            'username' => 'TEMP-' . uniqid(), 
+            'password' => password_hash('123456', PASSWORD_DEFAULT),
+            'foto' => $namaFoto
+        ];
 
-        return redirect()->to('admin/siswa')->with('success', 'Data Siswa berhasil ditambahkan.');
+        $this->siswaModel->save($data);
+        $insertId = $this->siswaModel->getInsertID();
+
+        $newUsername = 'TKA' . sprintf('%07d', $insertId);
+        $this->siswaModel->update($insertId, ['username' => $newUsername]);
+
+        return redirect()->to('admin/siswa')->with('success', 'Data siswa berhasil ditambahkan. Username: ' . $newUsername);
     }
 
     public function edit($id)
     {
+        $siswa = $this->siswaModel->find($id);
+        if (!$siswa) {
+            return redirect()->to('admin/siswa')->with('error', 'Data tidak ditemukan.');
+        }
+
         $data = [
             'title' => 'Edit Siswa',
-            'siswa' => $this->siswaModel->find($id),
+            'siswa' => $siswa,
             'sekolah' => $this->sekolahModel->findAll(),
             'validation' => \Config\Services::validation()
         ];
@@ -89,181 +114,129 @@ class Siswa extends BaseController
 
     public function update($id)
     {
-        if (!$this->validate([
+        $rules = [
             'nisn' => "required|is_unique[siswa.nisn,id,$id]",
             'nama_lengkap' => 'required',
             'sekolah_id' => 'required',
-            'username' => "required|is_unique[siswa.username,id,$id]",
+            'tanggal_lahir' => 'required|valid_date',
+            'jenis_kelamin' => 'required|in_list[L,P]',
             'foto' => 'max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]'
-        ])) {
+        ];
+
+        if ($this->request->getPost('password')) {
+            $rules['password'] = 'min_length[6]';
+        }
+
+        if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
         $siswa = $this->siswaModel->find($id);
-        $fotoName = $siswa['foto'];
-
-        $fileFoto = $this->request->getFile('foto');
-        if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
-            $fotoName = $fileFoto->getRandomName();
-            $fileFoto->move('uploads/profil', $fotoName);
-            if ($siswa['foto'] != 'default.jpg' && file_exists('uploads/profil/' . $siswa['foto'])) {
-                unlink('uploads/profil/' . $siswa['foto']);
-            }
-        }
-
-        $dataUpdate = [
+        $data = [
             'nisn' => $this->request->getPost('nisn'),
             'nama_lengkap' => $this->request->getPost('nama_lengkap'),
             'sekolah_id' => $this->request->getPost('sekolah_id'),
-            'username' => $this->request->getPost('username'),
-            'foto' => $fotoName
+            'tanggal_lahir' => $this->request->getPost('tanggal_lahir'),
+            'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
         ];
 
         if ($this->request->getPost('password')) {
-            $dataUpdate['password'] = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
+            $data['password'] = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
         }
 
-        $this->siswaModel->update($id, $dataUpdate);
+        $fileFoto = $this->request->getFile('foto');
+        if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
+            $namaFoto = $fileFoto->getRandomName();
+            $fileFoto->move('uploads/profil', $namaFoto);
+            if ($siswa['foto'] != 'default.jpg' && file_exists('uploads/profil/' . $siswa['foto'])) {
+                unlink('uploads/profil/' . $siswa['foto']);
+            }
+            $data['foto'] = $namaFoto;
+        }
 
-        return redirect()->to('admin/siswa')->with('success', 'Data Siswa berhasil diperbarui.');
+        $this->siswaModel->update($id, $data);
+        return redirect()->to('admin/siswa')->with('success', 'Data siswa berhasil diperbarui.');
     }
 
     public function delete($id)
     {
         $siswa = $this->siswaModel->find($id);
-        if ($siswa['foto'] != 'default.jpg' && file_exists('uploads/profil/' . $siswa['foto'])) {
-            unlink('uploads/profil/' . $siswa['foto']);
+        if ($siswa) {
+            if ($siswa['foto'] != 'default.jpg' && file_exists('uploads/profil/' . $siswa['foto'])) {
+                unlink('uploads/profil/' . $siswa['foto']);
+            }
+            $this->siswaModel->delete($id);
         }
-        $this->siswaModel->delete($id);
-        return redirect()->to('admin/siswa')->with('success', 'Data Siswa berhasil dihapus.');
+        return redirect()->to('admin/siswa')->with('success', 'Data siswa berhasil dihapus.');
     }
 
     public function import()
     {
         $file = $this->request->getFile('file_excel');
-
         if ($file && $file->isValid() && !$file->hasMoved()) {
             $ext = $file->getClientExtension();
+            if ($ext == 'xls') {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+            } else {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            }
             
-            if (!in_array($ext, ['xls', 'xlsx'])) {
-                return redirect()->back()->with('error', 'Format file harus .xls atau .xlsx');
-            }
+            $spreadsheet = $reader->load($file);
+            $sheet = $spreadsheet->getActiveSheet();
+            $data = $sheet->toArray();
 
-            if (!class_exists(\PhpOffice\PhpSpreadsheet\IOFactory::class)) {
-                return redirect()->back()->with('error', 'Library PhpSpreadsheet belum terinstall.');
-            }
+            $successCount = 0;
+            $errors = [];
 
-            try {
-                $spreadsheet = IOFactory::load($file->getTempName());
-                $sheet = $spreadsheet->getActiveSheet();
-                $data = $sheet->toArray();
-
-                $insertData = [];
-                $skippedRows = 0;
+            foreach ($data as $key => $row) {
+                if ($key == 0) continue; 
                 
-                $allSekolah = $this->sekolahModel->findAll();
-                $sekolahMap = [];
-                foreach ($allSekolah as $s) {
-                    $sekolahMap[strtolower(trim($s['nama_sekolah']))] = $s['id'];
-                }
-
-                foreach ($data as $key => $row) {
-                    if ($key == 0) continue;
-
-                    if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3])) {
-                        $skippedRows++;
-                        continue;
+                $nisn = $row[0] ?? null;
+                $nama = $row[1] ?? null;
+                $sekolahName = $row[2] ?? null;
+                
+                if ($nisn && $nama && $sekolahName) {
+                    $sekolah = $this->sekolahModel->where('nama_sekolah', $sekolahName)->first();
+                    if ($sekolah) {
+                        if ($this->siswaModel->where('nisn', $nisn)->countAllResults() == 0) {
+                            $this->siswaModel->save([
+                                'nisn' => $nisn,
+                                'nama_lengkap' => $nama,
+                                'sekolah_id' => $sekolah['id'],
+                                'username' => 'TEMP-' . uniqid(),
+                                'password' => password_hash('123456', PASSWORD_DEFAULT),
+                                'foto' => 'default.jpg',
+                                'jenis_kelamin' => 'L'
+                            ]);
+                            
+                            $insertId = $this->siswaModel->getInsertID();
+                            $newUsername = 'TKA' . sprintf('%07d', $insertId);
+                            $this->siswaModel->update($insertId, ['username' => $newUsername]);
+                            
+                            $successCount++;
+                        }
                     }
-
-                    $namaSekolahInput = strtolower(trim($row[2]));
-                    $sekolahId = $sekolahMap[$namaSekolahInput] ?? null;
-
-                    if (!$sekolahId) {
-                        $skippedRows++;
-                        continue;
-                    }
-
-                    $insertData[] = [
-                        'nisn'         => $row[0],
-                        'nama_lengkap' => $row[1],
-                        'sekolah_id'   => $sekolahId,
-                        'username'     => $row[3],
-                        'password'     => password_hash((string)($row[4] ?? '123456'), PASSWORD_DEFAULT),
-                        'foto'         => 'default.jpg',
-                    ];
                 }
-
-                if (!empty($insertData)) {
-                    $this->siswaModel->ignore(true)->insertBatch($insertData);
-                    
-                    $msg = count($insertData) . ' Data siswa berhasil diimport.';
-                    if ($skippedRows > 0) {
-                        $msg .= ' (' . $skippedRows . ' data dilewati karena format salah atau sekolah tidak ditemukan).';
-                    }
-                    return redirect()->to('admin/siswa')->with('success', $msg);
-                }
-
-                return redirect()->back()->with('error', 'Tidak ada data valid yang dapat dibaca. Pastikan Nama Sekolah sesuai dengan data di sistem.');
-
-            } catch (\Exception $e) {
-                return redirect()->back()->with('error', 'Gagal import: ' . $e->getMessage());
             }
-        }
 
-        return redirect()->back()->with('error', 'Gagal mengupload file.');
+            return redirect()->to('admin/siswa')->with('success', "$successCount data berhasil diimport.");
+        }
+        return redirect()->back()->with('error', 'File tidak valid.');
     }
 
     public function downloadTemplate()
     {
-        if (!class_exists(\PhpOffice\PhpSpreadsheet\Spreadsheet::class)) {
-            return redirect()->back()->with('error', 'Library PhpSpreadsheet belum terinstall.');
-        }
-
         $spreadsheet = new Spreadsheet();
-        
-        $dataSekolah = $this->sekolahModel->findAll();
-        
-        if (empty($dataSekolah)) {
-            return redirect()->back()->with('error', 'Buat data sekolah terlebih dahulu.');
-        }
-
-        $sheetOptions = $spreadsheet->createSheet();
-        $sheetOptions->setTitle('DataSekolahHidden');
-        $sheetOptions->setSheetState(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::SHEETSTATE_HIDDEN);
-
-        $rowCount = 1;
-        foreach ($dataSekolah as $s) {
-            $cleanName = trim($s['nama_sekolah']); 
-            $sheetOptions->setCellValue('A' . $rowCount, $cleanName);
-            $rowCount++;
-        }
-        
-        $lastRow = $rowCount - 1;
-        $formulaList = "DataSekolahHidden!$" . "A$1:$" . "A$" . $lastRow;
-
-        $spreadsheet->setActiveSheetIndex(0);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Template Import');
+        $sheet->setTitle('Template Siswa');
 
         $sheet->setCellValue('A1', 'NISN (Wajib & Unik)');
         $sheet->setCellValue('B1', 'Nama Lengkap (Wajib)');
-        $sheet->setCellValue('C1', 'Nama Sekolah (Pilih dari List)');
-        $sheet->setCellValue('D1', 'Username (Wajib & Unik)');
-        $sheet->setCellValue('E1', 'Password');
+        $sheet->setCellValue('C1', 'Nama Sekolah (Wajib)');
 
-        $headerStyle = [
-            'font' => ['bold' => true],
-            'fill' => [
-                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FFFFFF00'],
-            ],
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                ],
-            ],
-        ];
-        $sheet->getStyle('A1:E1')->applyFromArray($headerStyle);
+        $sekolah = $this->sekolahModel->findAll();
+        $sekolahNames = array_column($sekolah, 'nama_sekolah');
+        $formulaList = '"' . implode(',', $sekolahNames) . '"';
 
         for ($i = 2; $i <= 1000; $i++) {
             $validation = $sheet->getCell("C$i")->getDataValidation();
@@ -276,24 +249,45 @@ class Siswa extends BaseController
             $validation->setFormula1($formulaList);
         }
 
-        $sheet->setCellValue('A2', '0012345678');
-        $sheet->setCellValue('B2', 'Ahmad Siswa');
-        $sheet->setCellValue('C2', $dataSekolah[0]['nama_sekolah'] ?? ''); 
-        $sheet->setCellValue('D2', 'ahmad01');
-        $sheet->setCellValue('E2', '123456');
-
-        foreach(range('A','E') as $columnID) {
-            $sheet->getColumnDimension($columnID)->setAutoSize(true);
-        }
-
         $writer = new Xlsx($spreadsheet);
         $filename = 'template_import_siswa.xlsx';
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="'. $filename .'"');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
-
         $writer->save('php://output');
         exit;
+    }
+
+    public function exportPdf()
+    {
+        $sekolahId = $this->request->getGet('sekolah_id');
+        if (!$sekolahId) {
+            return redirect()->to('admin/siswa')->with('error', 'Pilih filter sekolah terlebih dahulu untuk mencetak PDF.');
+        }
+
+        $instansi = $this->instansiModel->find(1);
+        $sekolah = $this->sekolahModel->find($sekolahId);
+        $siswa = $this->siswaModel->where('sekolah_id', $sekolahId)
+            ->orderBy('nama_lengkap', 'ASC')
+            ->findAll();
+
+        $data = [
+            'instansi' => $instansi,
+            'sekolah' => $sekolah,
+            'siswa' => $siswa
+        ];
+
+        $html = view('admin/siswa/cetak_pdf', $data);
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+        
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        
+        $dompdf->stream('Data_Akun_Siswa_' . ($sekolah['nama_sekolah'] ?? 'All') . '.pdf', ['Attachment' => false]);
     }
 }
