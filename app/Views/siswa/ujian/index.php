@@ -1,187 +1,243 @@
 <?= $this->extend('layouts/ujian'); ?>
 
 <?= $this->section('content'); ?>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top" style="height: 60px;">
+<!-- Header Ujian (Login Style) -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top" style="height: 80px;">
     <div class="container-fluid px-4">
-        <a class="navbar-brand fw-bold" href="#">
-            <i class="bi bi-mortarboard-fill me-2"></i> UJIAN ONLINE
-        </a>
-        <div class="d-flex align-items-center text-white">
-            <div class="me-4 d-none d-md-block">
-                <small class="d-block text-white-50" style="font-size: 0.75rem;">Nama Peserta</small>
-                <span class="fw-bold"><?= $siswa['nama_lengkap'] ?></span>
+        <!-- Logo & Identitas Sekolah -->
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <?php if (!empty($jadwal['logo']) && file_exists('uploads/sekolah/' . $jadwal['logo'])) : ?>
+                <img src="<?= base_url('uploads/sekolah/' . $jadwal['logo']) ?>" alt="Logo" style="height: 50px;" class="me-3">
+            <?php else: ?>
+                <img src="<?= base_url('assets/static/images/logo/logo.png') ?>" alt="Logo" style="height: 50px;" class="me-3">
+            <?php endif; ?>
+            <div class="d-flex flex-column">
+                <span class="fw-bold text-primary" style="line-height: 1.1; font-size: 1.1rem;"><?= $jadwal['nama_sekolah'] ?></span>
+                <span class="text-muted small" style="font-size: 0.8rem;"><?= $jadwal['nama_mapel'] ?></span>
             </div>
-            <div class="text-end bg-white text-primary px-3 py-1 rounded shadow-sm">
-                <small class="d-block text-muted" style="font-size: 0.7rem; line-height: 1;">Sisa Waktu</small>
-                <span id="timer" class="fw-bold fs-5">00:00:00</span>
+        </a>
+
+        <!-- Tools Kanan: Timer, Daftar Soal, Nama -->
+        <div class="d-flex align-items-center gap-3">
+            
+            <!-- Timer Box -->
+            <div class="bg-primary bg-opacity-10 px-3 py-2 rounded-3 border border-primary border-opacity-25 text-center" style="min-width: 110px;">
+                <small class="d-block text-primary fw-bold text-uppercase" style="font-size: 0.65rem; line-height: 1;">Sisa Waktu</small>
+                <span id="timer" class="fw-bold fs-5 text-primary" style="line-height: 1.1;">00:00:00</span>
+            </div>
+
+            <!-- Tombol Daftar Soal (Popup) -->
+            <button class="btn btn-outline-dark shadow-sm position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSoal">
+                <i class="bi bi-grid-3x3-gap-fill"></i> 
+                <span class="d-none d-md-inline ms-1">Daftar Soal</span>
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" id="badge-not-answered" title="Belum dijawab"></span>
+            </button>
+
+            <!-- Info Peserta (Desktop) -->
+            <div class="d-none d-lg-block text-end ms-2 border-start ps-3">
+                <div class="fw-bold text-dark text-truncate" style="max-width: 150px;"><?= $siswa['nama_lengkap'] ?></div>
+                <div class="text-muted small">Peserta Ujian</div>
             </div>
         </div>
     </div>
 </nav>
 
-<div class="container-fluid" style="margin-top: 60px; height: calc(100vh - 60px);">
-    <div class="row h-100">
-        <div class="col-md-9 h-100 overflow-auto bg-light p-4" id="soal-container">
-            <div class="card shadow-sm border-0 mb-3">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="m-0 text-primary"><?= $jadwal['nama_mapel'] ?></h5>
-                        <small class="text-muted"><?= $jadwal['nama_sekolah'] ?></small>
-                    </div>
-                    <div class="badge bg-primary fs-6">
-                        No. <span id="nomor-soal-display">1</span>
-                    </div>
+<!-- Container Ujian -->
+<div class="container-fluid py-4" style="margin-top: 80px; min-height: calc(100vh - 80px);">
+    <div class="row h-100 g-3">
+        
+        <!-- KOLOM KIRI: SOAL (PERTANYAAN) -->
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
+                    <span class="badge bg-primary fs-6 px-3 py-2 rounded-pill shadow-sm">Soal No. <span id="nomor-soal-display">1</span></span>
+                    <span class="ms-auto text-muted small"><i class="bi bi-info-circle me-1"></i> Perhatikan soal dengan teliti</span>
                 </div>
-            </div>
-
-            <?php foreach ($soal as $index => $s) : ?>
-                <div class="card shadow-sm border-0 mb-4 soal-item" id="soal-<?= $index ?>" style="<?= $index === 0 ? '' : 'display: none;' ?>">
-                    <div class="card-body p-4">
-                        <div class="soal-text mb-4" style="font-size: 1.1rem;">
-                            <?= $s['pertanyaan'] ?>
-                            <?php if ($s['file_soal']) : ?>
-                                <div class="mt-3">
-                                    <img src="<?= base_url('uploads/bank_soal/' . $s['file_soal']) ?>" class="img-fluid rounded border" style="max-height: 400px;">
-                                </div>
-                            <?php endif; ?>
-                        </div>
-
-                        <div class="opsi-container">
-                            <?php 
-                                $jawabanSiswa = $jawaban[$s['id']] ?? null;
-                                $jawabanSiswaArr = json_decode($jawabanSiswa ?? '[]', true);
-                            ?>
-
-                            <?php if ($s['jenis'] == 'pg') : ?>
-                                <?php foreach (['a', 'b', 'c', 'd', 'e'] as $opt) : ?>
-                                    <?php if (!empty($s['opsi_' . $opt])) : ?>
-                                        <div class="form-check mb-3 p-3 border rounded option-hover <?= ($jawabanSiswa == strtoupper($opt)) ? 'bg-light-primary border-primary' : '' ?>">
-                                            <input class="form-check-input ms-1" type="radio" name="jawaban_<?= $s['id'] ?>" 
-                                                   id="opt_<?= $s['id'] ?>_<?= $opt ?>" value="<?= strtoupper($opt) ?>" 
-                                                   <?= ($jawabanSiswa == strtoupper($opt)) ? 'checked' : '' ?>
-                                                   onchange="saveAnswer(<?= $s['id'] ?>, 'pg', <?= $index ?>)">
-                                            <label class="form-check-label w-100 ps-2 cursor-pointer" for="opt_<?= $s['id'] ?>_<?= $opt ?>">
-                                                <span class="fw-bold me-2"><?= strtoupper($opt) ?>.</span> 
-                                                <?= $s['opsi_' . $opt] ?>
-                                                <?php if ($s['file_' . $opt]) : ?>
-                                                    <div class="mt-2">
-                                                        <img src="<?= base_url('uploads/bank_soal/' . $s['file_' . $opt]) ?>" class="img-thumbnail" style="max-height: 150px;">
-                                                    </div>
-                                                <?php endif; ?>
-                                            </label>
-                                        </div>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-
-                            <?php elseif ($s['jenis'] == 'pg_kompleks') : ?>
-                                <div class="alert alert-info py-2 mb-3"><i class="bi bi-info-circle me-1"></i> Pilih lebih dari satu jawaban yang benar.</div>
-                                <?php foreach (['a', 'b', 'c', 'd', 'e'] as $opt) : ?>
-                                    <?php if (!empty($s['opsi_' . $opt])) : ?>
-                                        <div class="form-check mb-3 p-3 border rounded option-hover">
-                                            <input class="form-check-input ms-1" type="checkbox" name="jawaban_<?= $s['id'] ?>[]" 
-                                                   id="opt_<?= $s['id'] ?>_<?= $opt ?>" value="<?= strtoupper($opt) ?>"
-                                                   <?= (is_array($jawabanSiswaArr) && in_array(strtoupper($opt), $jawabanSiswaArr)) ? 'checked' : '' ?>
-                                                   onchange="saveAnswer(<?= $s['id'] ?>, 'pg_kompleks', <?= $index ?>)">
-                                            <label class="form-check-label w-100 ps-2 cursor-pointer" for="opt_<?= $s['id'] ?>_<?= $opt ?>">
-                                                <span class="fw-bold me-2"><?= strtoupper($opt) ?>.</span> 
-                                                <?= $s['opsi_' . $opt] ?>
-                                            </label>
-                                        </div>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-
-                            <?php elseif ($s['jenis'] == 'benar_salah') : ?>
-                                <div class="alert alert-info py-2 mb-3"><i class="bi bi-info-circle me-1"></i> Tentukan Benar atau Salah untuk setiap pernyataan.</div>
-                                <table class="table table-bordered">
-                                    <thead class="bg-light">
-                                        <tr>
-                                            <th>Pernyataan</th>
-                                            <th class="text-center" width="15%">Benar</th>
-                                            <th class="text-center" width="15%">Salah</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php 
-                                            $pernyataan = json_decode($s['opsi_a'], true) ?? [];
-                                        ?>
-                                        <?php foreach ($pernyataan as $idx => $per) : ?>
-                                            <tr>
-                                                <td><?= $per ?></td>
-                                                <td class="text-center align-middle">
-                                                    <input type="radio" name="jawaban_<?= $s['id'] ?>[<?= $idx ?>]" value="Benar" 
-                                                           <?= (isset($jawabanSiswaArr[$idx]) && $jawabanSiswaArr[$idx] == 'Benar') ? 'checked' : '' ?>
-                                                           onchange="saveAnswer(<?= $s['id'] ?>, 'benar_salah', <?= $index ?>)">
-                                                </td>
-                                                <td class="text-center align-middle">
-                                                    <input type="radio" name="jawaban_<?= $s['id'] ?>[<?= $idx ?>]" value="Salah" 
-                                                           <?= (isset($jawabanSiswaArr[$idx]) && $jawabanSiswaArr[$idx] == 'Salah') ? 'checked' : '' ?>
-                                                           onchange="saveAnswer(<?= $s['id'] ?>, 'benar_salah', <?= $index ?>)">
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-
-                            <?php elseif ($s['jenis'] == 'esai') : ?>
-                                <div class="form-group">
-                                    <label class="form-label fw-bold">Jawaban Anda:</label>
-                                    <textarea class="form-control" rows="6" id="jawaban_<?= $s['id'] ?>" 
-                                              onblur="saveAnswer(<?= $s['id'] ?>, 'esai', <?= $index ?>)"><?= $jawabanSiswa ?></textarea>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-
-            <div class="d-flex justify-content-between mt-4 mb-5">
-                <button class="btn btn-secondary px-4" id="btn-prev" onclick="changeSoal(-1)" disabled>
-                    <i class="bi bi-arrow-left me-1"></i> Sebelumnya
-                </button>
                 
-                <button class="btn btn-warning text-white px-4" id="btn-ragu" onclick="toggleRagu()">
-                    <input type="checkbox" id="check-ragu" class="d-none"> 
-                    <i class="bi bi-square me-1" id="icon-ragu"></i> Ragu-ragu
-                </button>
-
-                <button class="btn btn-primary px-4" id="btn-next" onclick="changeSoal(1)">
-                    Selanjutnya <i class="bi bi-arrow-right ms-1"></i>
-                </button>
-                
-                <button class="btn btn-success px-4 d-none" id="btn-selesai" onclick="finishExam()">
-                    <i class="bi bi-check-circle-fill me-1"></i> Selesai Ujian
-                </button>
-            </div>
-        </div>
-
-        <div class="col-md-3 h-100 bg-white border-start p-0 d-flex flex-column shadow-lg" style="z-index: 10;">
-            <div class="p-3 bg-light border-bottom text-center">
-                <h6 class="m-0 fw-bold text-uppercase">Nomor Soal</h6>
-            </div>
-            <div class="p-3 flex-grow-1 overflow-auto">
-                <div class="d-grid gap-2" style="grid-template-columns: repeat(5, 1fr);">
+                <div class="card-body overflow-auto bg-light bg-opacity-25" style="max-height: 80vh; font-size: 1.15rem; line-height: 1.8;">
                     <?php foreach ($soal as $index => $s) : ?>
-                        <?php 
-                            $bgClass = 'btn-outline-secondary';
-                            if (isset($jawaban[$s['id']]) && !empty($jawaban[$s['id']])) {
-                                $bgClass = 'btn-primary';
-                            }
-                        ?>
-                        <button type="button" class="btn btn-sm <?= $bgClass ?> position-relative" id="nav-<?= $index ?>" onclick="jumpToSoal(<?= $index ?>)">
-                            <?= $index + 1 ?>
-                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-warning border border-light rounded-circle d-none" id="badge-ragu-<?= $index ?>"></span>
-                        </button>
+                        <div class="soal-content" id="soal-content-<?= $index ?>" style="<?= $index === 0 ? '' : 'display: none;' ?>">
+                            <div class="p-3 bg-white rounded shadow-sm border mb-3">
+                                <?= $s['pertanyaan'] ?>
+                            </div>
+                            <?php if ($s['file_soal']) : ?>
+                                <div class="mt-3 text-center">
+                                    <img src="<?= base_url('uploads/bank_soal/' . $s['file_soal']) ?>" class="img-fluid rounded border shadow-sm" style="max-height: 450px;">
+                                </div>
+                            <?php endif; ?>
+                        </div>
                     <?php endforeach; ?>
                 </div>
             </div>
-            <div class="p-3 border-top bg-light">
-                <div class="d-flex justify-content-between small text-muted mb-2">
-                    <div class="d-flex align-items-center"><span class="bg-primary rounded-circle d-inline-block me-1" style="width: 10px; height: 10px;"></span> Dijawab</div>
-                    <div class="d-flex align-items-center"><span class="border border-secondary rounded-circle d-inline-block me-1" style="width: 10px; height: 10px;"></span> Belum</div>
-                    <div class="d-flex align-items-center"><span class="bg-warning rounded-circle d-inline-block me-1" style="width: 10px; height: 10px;"></span> Ragu</div>
+        </div>
+
+        <!-- KOLOM KANAN: JAWABAN (OPSI) & NAVIGASI -->
+        <div class="col-md-4 d-flex flex-column">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-primary text-white fw-bold py-3 rounded-top">
+                    <i class="bi bi-pencil-square me-2"></i> Lembar Jawaban
                 </div>
-                <button class="btn btn-danger w-100" onclick="finishExam()">Hentikan Ujian</button>
+                
+                <div class="card-body overflow-auto d-flex flex-column" style="max-height: 80vh;">
+                    
+                    <div class="flex-grow-1">
+                        <?php foreach ($soal as $index => $s) : ?>
+                            <div class="soal-opsi-wrapper" id="opsi-wrapper-<?= $index ?>" style="<?= $index === 0 ? '' : 'display: none;' ?>">
+                                
+                                <p class="text-muted small mb-2">Pilih jawaban yang menurut Anda benar:</p>
+
+                                <?php 
+                                    $jawabanSiswa = $jawaban[$s['id']] ?? null;
+                                    $jawabanSiswaArr = json_decode($jawabanSiswa ?? '[]', true);
+                                ?>
+
+                                <?php if ($s['jenis'] == 'pg') : ?>
+                                    <div class="d-grid gap-2">
+                                        <?php foreach (['a', 'b', 'c', 'd', 'e'] as $opt) : ?>
+                                            <?php if (!empty($s['opsi_' . $opt])) : ?>
+                                                <input type="radio" class="btn-check" name="jawaban_<?= $s['id'] ?>" 
+                                                       id="opt_<?= $s['id'] ?>_<?= $opt ?>" value="<?= strtoupper($opt) ?>" 
+                                                       <?= ($jawabanSiswa == strtoupper($opt)) ? 'checked' : '' ?>
+                                                       onchange="saveAnswer(<?= $s['id'] ?>, 'pg', <?= $index ?>)">
+                                                <label class="btn btn-outline-secondary text-start p-3 d-flex align-items-center option-card" for="opt_<?= $s['id'] ?>_<?= $opt ?>">
+                                                    <span class="badge bg-secondary me-3 rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 30px; height: 30px;"><?= strtoupper($opt) ?></span>
+                                                    <div class="flex-grow-1 lh-sm">
+                                                        <?= $s['opsi_' . $opt] ?>
+                                                        <?php if ($s['file_' . $opt]) : ?>
+                                                            <br><img src="<?= base_url('uploads/bank_soal/' . $s['file_' . $opt]) ?>" class="img-thumbnail mt-2" style="max-height: 80px;">
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </label>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </div>
+
+                                <?php elseif ($s['jenis'] == 'pg_kompleks') : ?>
+                                    <div class="alert alert-info py-2 small"><i class="bi bi-check-all me-1"></i> Jawaban lebih dari satu.</div>
+                                    <div class="d-grid gap-2">
+                                        <?php foreach (['a', 'b', 'c', 'd', 'e'] as $opt) : ?>
+                                            <?php if (!empty($s['opsi_' . $opt])) : ?>
+                                                <input type="checkbox" class="btn-check" name="jawaban_<?= $s['id'] ?>[]" 
+                                                       id="opt_<?= $s['id'] ?>_<?= $opt ?>" value="<?= strtoupper($opt) ?>"
+                                                       <?= (is_array($jawabanSiswaArr) && in_array(strtoupper($opt), $jawabanSiswaArr)) ? 'checked' : '' ?>
+                                                       onchange="saveAnswer(<?= $s['id'] ?>, 'pg_kompleks', <?= $index ?>)">
+                                                <label class="btn btn-outline-secondary text-start p-3 option-card" for="opt_<?= $s['id'] ?>_<?= $opt ?>">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="bi bi-square me-3 fs-5 check-icon"></i>
+                                                        <div class="flex-grow-1 lh-sm">
+                                                            <span class="fw-bold me-1 text-primary"><?= strtoupper($opt) ?>.</span> <?= $s['opsi_' . $opt] ?>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </div>
+
+                                <?php elseif ($s['jenis'] == 'benar_salah') : ?>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-sm mb-0">
+                                            <thead class="bg-light text-center">
+                                                <tr><th>Pernyataan</th><th width="15%">B</th><th width="15%">S</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php $pernyataan = json_decode($s['opsi_a'], true) ?? []; ?>
+                                                <?php foreach ($pernyataan as $idx => $per) : ?>
+                                                    <tr>
+                                                        <td class="small align-middle px-2 py-2"><?= $per ?></td>
+                                                        <td class="text-center align-middle p-0">
+                                                            <input type="radio" class="btn-check" name="jawaban_<?= $s['id'] ?>[<?= $idx ?>]" id="bs_<?= $s['id'] ?>_<?= $idx ?>_b" value="Benar" 
+                                                                   <?= (isset($jawabanSiswaArr[$idx]) && $jawabanSiswaArr[$idx] == 'Benar') ? 'checked' : '' ?>
+                                                                   onchange="saveAnswer(<?= $s['id'] ?>, 'benar_salah', <?= $index ?>)">
+                                                            <label class="btn btn-outline-success w-100 h-100 rounded-0 border-0 d-flex align-items-center justify-content-center" for="bs_<?= $s['id'] ?>_<?= $idx ?>_b"><i class="bi bi-check-lg"></i></label>
+                                                        </td>
+                                                        <td class="text-center align-middle p-0">
+                                                            <input type="radio" class="btn-check" name="jawaban_<?= $s['id'] ?>[<?= $idx ?>]" id="bs_<?= $s['id'] ?>_<?= $idx ?>_s" value="Salah" 
+                                                                   <?= (isset($jawabanSiswaArr[$idx]) && $jawabanSiswaArr[$idx] == 'Salah') ? 'checked' : '' ?>
+                                                                   onchange="saveAnswer(<?= $s['id'] ?>, 'benar_salah', <?= $index ?>)">
+                                                            <label class="btn btn-outline-danger w-100 h-100 rounded-0 border-0 d-flex align-items-center justify-content-center" for="bs_<?= $s['id'] ?>_<?= $idx ?>_s"><i class="bi bi-x-lg"></i></label>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                <?php elseif ($s['jenis'] == 'esai') : ?>
+                                    <label class="form-label fw-bold small text-muted">Jawaban Esai:</label>
+                                    <textarea class="form-control bg-light" rows="10" id="jawaban_<?= $s['id'] ?>" 
+                                              onblur="saveAnswer(<?= $s['id'] ?>, 'esai', <?= $index ?>)" placeholder="Ketik jawaban Anda disini..."><?= $jawabanSiswa ?></textarea>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- Tombol Navigasi di Bagian Bawah Kolom Kanan (Jawaban) -->
+                    <div class="mt-4 pt-3 border-top">
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <button class="btn btn-outline-secondary w-100" id="btn-prev" onclick="changeSoal(-1)" disabled>
+                                    <i class="bi bi-chevron-left"></i> Prev
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-warning text-white w-100" id="btn-ragu" onclick="toggleRagu()">
+                                    <i class="bi bi-flag-fill"></i> Ragu
+                                    <input type="checkbox" id="check-ragu" class="d-none"> 
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-primary w-100" id="btn-next" onclick="changeSoal(1)">
+                                    Next <i class="bi bi-chevron-right"></i>
+                                </button>
+                                <button class="btn btn-success w-100 d-none" id="btn-selesai" onclick="finishExam()">
+                                    Submit <i class="bi bi-send-fill ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Offcanvas Daftar Soal (Popup Kanan) -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasSoal" aria-labelledby="offcanvasSoalLabel">
+    <div class="offcanvas-header bg-primary text-white">
+        <h5 class="offcanvas-title" id="offcanvasSoalLabel"><i class="bi bi-grid-3x3-gap-fill me-2"></i> Navigasi Soal</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="row g-2">
+            <?php foreach ($soal as $index => $s) : ?>
+                <?php 
+                    $bgClass = 'btn-outline-secondary';
+                    if (isset($jawaban[$s['id']]) && !empty($jawaban[$s['id']])) {
+                        $bgClass = 'btn-primary';
+                    }
+                ?>
+                <div class="col-3 col-md-3">
+                    <button type="button" class="btn w-100 <?= $bgClass ?> position-relative p-2 fw-bold" id="nav-<?= $index ?>" onclick="jumpToSoal(<?= $index ?>)">
+                        <?= $index + 1 ?>
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-warning border border-light rounded-circle d-none" id="badge-ragu-<?= $index ?>" style="width:10px; height:10px;"></span>
+                    </button>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <div class="mt-4 pt-3 border-top">
+            <h6 class="text-muted small fw-bold mb-3">Keterangan Warna:</h6>
+            <div class="d-flex justify-content-between small text-muted mb-2">
+                <div class="d-flex align-items-center"><span class="bg-primary rounded d-inline-block me-2" style="width: 20px; height: 20px;"></span> Dijawab</div>
+                <div class="d-flex align-items-center"><span class="border border-secondary rounded d-inline-block me-2" style="width: 20px; height: 20px;"></span> Belum</div>
+            </div>
+            <div class="d-flex align-items-center small text-muted"><span class="bg-warning rounded d-inline-block me-2" style="width: 20px; height: 20px;"></span> Ragu-ragu</div>
+            
+            <button class="btn btn-danger w-100 mt-4" onclick="finishExam()">
+                <i class="bi bi-stop-circle-fill me-2"></i> Hentikan Ujian
+            </button>
         </div>
     </div>
 </div>
@@ -203,7 +259,7 @@
             
             if (distance < 0) {
                 clearInterval(timerInterval);
-                document.getElementById("timer").innerHTML = "WAKTU HABIS";
+                document.getElementById("timer").innerHTML = "00:00:00";
                 finishExam(true);
                 return;
             }
@@ -217,16 +273,18 @@
                 (minutes < 10 ? "0" + minutes : minutes) + ":" + 
                 (seconds < 10 ? "0" + seconds : seconds);
             
-            // Warning 5 minutes left
-            if(distance < 300000) {
+            if(distance < 300000) { // 5 menit
                 document.getElementById("timer").classList.add("text-danger", "pulse-animation");
             }
         }, 1000);
     }
 
     function jumpToSoal(index) {
-        document.querySelectorAll('.soal-item').forEach(el => el.style.display = 'none');
-        document.getElementById('soal-' + index).style.display = 'block';
+        document.querySelectorAll('.soal-content').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.soal-opsi-wrapper').forEach(el => el.style.display = 'none');
+        
+        document.getElementById('soal-content-' + index).style.display = 'block';
+        document.getElementById('opsi-wrapper-' + index).style.display = 'block';
         
         currentSoal = index;
         document.getElementById('nomor-soal-display').innerText = currentSoal + 1;
@@ -240,9 +298,17 @@
             document.getElementById('btn-next').classList.remove('d-none');
             document.getElementById('btn-selesai').classList.add('d-none');
         }
-
-        // Reset ragu button UI based on state (Not implemented fully for persistence, just visual toggle per session if needed)
-        // Here we just uncheck it visually for simplicity unless we store ragu state
+        
+        // Reset Ragu Button UI based on stored state if needed (currently simple toggle)
+        const badge = document.getElementById('badge-ragu-' + currentSoal);
+        const btnRagu = document.getElementById('btn-ragu');
+        if (!badge.classList.contains('d-none')) {
+             btnRagu.classList.remove('btn-warning', 'text-white');
+             btnRagu.classList.add('btn-outline-warning', 'text-dark'); // Visual feedback active
+        } else {
+             btnRagu.classList.add('btn-warning', 'text-white');
+             btnRagu.classList.remove('btn-outline-warning', 'text-dark');
+        }
     }
 
     function changeSoal(direction) {
@@ -258,13 +324,6 @@
         if (jenis === 'pg') {
             const el = document.querySelector(`input[name="jawaban_${soalId}"]:checked`);
             if (el) jawaban = el.value;
-            
-            // UI Update
-            document.querySelectorAll(`input[name="jawaban_${soalId}"]`).forEach(inp => {
-                inp.parentElement.classList.remove('bg-light-primary', 'border-primary');
-            });
-            if(el) el.parentElement.classList.add('bg-light-primary', 'border-primary');
-
         } else if (jenis === 'pg_kompleks') {
             jawaban = [];
             document.querySelectorAll(`input[name="jawaban_${soalId}[]"]:checked`).forEach((el) => {
@@ -304,16 +363,10 @@
 
     function toggleRagu() {
         const badge = document.getElementById('badge-ragu-' + currentSoal);
-        const icon = document.getElementById('icon-ragu');
-        
         if (badge.classList.contains('d-none')) {
             badge.classList.remove('d-none');
-            icon.classList.remove('bi-square');
-            icon.classList.add('bi-check-square-fill');
         } else {
             badge.classList.add('d-none');
-            icon.classList.remove('bi-check-square-fill');
-            icon.classList.add('bi-square');
         }
     }
 
@@ -348,30 +401,17 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         updateTimer();
-        
-        // Prevent refresh or back
-        window.onbeforeunload = function() {
-            return "Ujian sedang berlangsung, jangan tinggalkan halaman ini!";
-        };
-        
-        // Disable context menu
+        window.onbeforeunload = function() { return "Ujian sedang berlangsung!"; };
         document.addEventListener('contextmenu', event => event.preventDefault());
     });
 </script>
 
 <style>
-    .cursor-pointer { cursor: pointer; }
-    .option-hover:hover { background-color: #f8f9fa; }
+    .option-card:hover { background-color: #f8f9fa; border-color: #0d6efd; }
+    .btn-check:checked + .option-card { background-color: #e7f1ff; border-color: #0d6efd; color: #0d6efd; }
+    .btn-check:checked + .option-card .badge { background-color: #0d6efd !important; }
+    .btn-check:checked + .option-card .check-icon { color: #0d6efd; }
     .pulse-animation { animation: pulse-red 1s infinite; }
-    @keyframes pulse-red {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
-    }
-    /* Hide Scrollbar but keep functionality */
-    #soal-container::-webkit-scrollbar { width: 8px; }
-    #soal-container::-webkit-scrollbar-track { background: #f1f1f1; }
-    #soal-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
-    #soal-container::-webkit-scrollbar-thumb:hover { background: #aaa; }
+    @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 </style>
 <?= $this->endSection(); ?>
