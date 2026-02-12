@@ -1,27 +1,27 @@
 <?= $this->extend('layouts/ujian'); ?>
 
 <?= $this->section('content'); ?>
-<!-- Header Login Style -->
-<nav class="navbar navbar-light bg-white shadow-sm mb-4" style="height: 80px;">
+<!-- Header Biru (Primary) -->
+<nav class="navbar navbar-dark bg-primary shadow-sm mb-4" style="height: 80px;">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="#">
             <?php if (!empty($sekolah['logo']) && file_exists('uploads/sekolah/' . $sekolah['logo'])) : ?>
-                <img src="<?= base_url('uploads/sekolah/' . $sekolah['logo']) ?>" alt="Logo" style="height: 50px;" class="me-3">
+                <img src="<?= base_url('uploads/sekolah/' . $sekolah['logo']) ?>" alt="Logo" style="height: 50px;" class="me-3 bg-white rounded-circle p-1">
             <?php else: ?>
-                <img src="<?= base_url('assets/static/images/logo/logo.png') ?>" alt="Logo" style="height: 50px;" class="me-3">
+                <img src="<?= base_url('assets/static/images/logo/logo.png') ?>" alt="Logo" style="height: 50px;" class="me-3 bg-white rounded-circle p-1">
             <?php endif; ?>
             <div class="d-flex flex-column justify-content-center">
-                <h5 class="m-0 fw-bold text-primary" style="line-height: 1;"><?= $sekolah['nama_sekolah'] ?></h5>
-                <small class="text-muted" style="font-size: 0.85rem;">Computer Based Test (CBT)</small>
+                <h5 class="m-0 fw-bold text-white" style="line-height: 1;"><?= $sekolah['nama_sekolah'] ?></h5>
+                <small class="text-white-50" style="font-size: 0.85rem;">Computer Based Test (CBT)</small>
             </div>
         </a>
         <div class="d-none d-md-flex align-items-center gap-3">
-             <div class="text-end">
-                 <span class="d-block fw-bold text-dark"><?= $siswa['nama_lengkap'] ?></span>
-                 <span class="d-block text-muted small"><?= $siswa['username'] ?></span>
+             <div class="text-end text-white">
+                 <span class="d-block fw-bold"><?= $siswa['nama_lengkap'] ?></span>
+                 <span class="d-block text-white-50 small"><?= $siswa['username'] ?></span>
              </div>
-             <div class="vr"></div>
-             <a href="<?= base_url('logout') ?>" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+             <div class="vr text-white opacity-50"></div>
+             <a href="<?= base_url('logout') ?>" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm border-0">
                 <i class="bi bi-power me-1"></i> Logout
             </a>
         </div>
