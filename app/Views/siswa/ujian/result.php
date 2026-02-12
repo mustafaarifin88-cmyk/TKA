@@ -1,12 +1,39 @@
 <?= $this->extend('layouts/ujian'); ?>
 
 <?= $this->section('content'); ?>
-<div class="container py-5">
+<!-- Header Seragam (Navbar Biru) -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top" style="height: 80px;">
+    <div class="container-fluid px-4">
+        <!-- Logo & Identitas Sekolah -->
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <!-- Logo SD dari Link Eksternal Tanpa Background -->
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhQFOXlcj2tOqNuOKDC35tPNB_BcLIc8mnUuzdHJDLgIo3bz9FnNEqNgwzMROJDnnDHjfTSwi8XvimNwKfYmhBiTmiZcNta6luGpkB6vzLsMTlLcxqE2kJ4s1Yc7YJLFC659LKSkmrfZmU/s2048/Logo+Sekolah+Dasar+%2528Logo+SD%2529.png" alt="Logo" style="height: 50px;" class="me-3">
+            
+            <div class="d-flex flex-column">
+                <span class="fw-bold text-white" style="line-height: 1.1; font-size: 1.1rem;"><?= $jadwal['nama_sekolah'] ?></span>
+                <span class="text-white-50 small" style="font-size: 0.8rem;"><?= $jadwal['nama_mapel'] ?></span>
+            </div>
+        </a>
+
+        <!-- Info Peserta -->
+        <div class="d-flex align-items-center gap-3">
+            <div class="d-none d-lg-block text-end ms-2 border-start border-white border-opacity-50 ps-3 text-white">
+                <div class="fw-bold text-truncate" style="max-width: 150px;"><?= $siswa['nama_lengkap'] ?></div>
+                <div class="text-white-50 small">Peserta Ujian</div>
+            </div>
+            <a href="<?= base_url('logout') ?>" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm border-0">
+                <i class="bi bi-power me-1"></i> Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-5" style="margin-top: 80px;">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                 <div class="card-header bg-success text-white text-center py-4">
-                    <div class="avatar-lg mb-2">
+                    <div class="mb-2">
                         <i class="bi bi-check-circle-fill" style="font-size: 3rem;"></i>
                     </div>
                     <h3 class="fw-bold mb-0">Ujian Selesai!</h3>
@@ -133,7 +160,7 @@
                 </div>
 
                 <div class="card-footer bg-light p-4 text-center">
-                    <a href="<?= base_url('logout') ?>" class="btn btn-danger btn-lg px-5">
+                    <a href="<?= base_url('logout') ?>" class="btn btn-danger btn-lg px-5 rounded-pill shadow-sm">
                         <i class="bi bi-box-arrow-left me-2"></i> Logout
                     </a>
                 </div>
