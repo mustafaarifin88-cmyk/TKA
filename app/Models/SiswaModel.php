@@ -10,6 +10,8 @@ class SiswaModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
+    
+    // Menambahkan tanggal_lahir dan jenis_kelamin agar bisa disimpan
     protected $allowedFields    = [
         'nisn', 
         'nama_lengkap', 
